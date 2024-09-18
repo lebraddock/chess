@@ -173,26 +173,30 @@ public class ChessPiece {
                 posX = myPosition.getRow();
                 posY = myPosition.getColumn();
                 ArrayList<int[]> posMoves = new ArrayList<int[]>();
-                posMoves.add()
-                while(true){
-                    if(board.getPiece(new ChessPosition(posX,posY)) == null){
-                        moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
-                        //System.out.println(posX + ", " + posY);
-                    }
-                    else{
-                        if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() == color){
-                            //if we run into our own piece
-                            break;
-                        }
-                        else{
-                            // if we run into opponents pice
+                posMoves.add(new int[] {posX,posY+1});
+                posMoves.add(new int[] {posX+1,posY+1});
+                posMoves.add(new int[] {posX+1,posY});
+                posMoves.add(new int[] {posX+1,posY-1});
+                posMoves.add(new int[] {posX,posY-1});
+                posMoves.add(new int[] {posX-1,posY-1});
+                posMoves.add(new int[] {posX-1,posY});
+                posMoves.add(new int[] {posX-1,posY+1});
+                for(int i = 0; i < 8; i++){
+                    posX = posMoves.get(i)[0];
+                    posY = posMoves.get(i)[1];
+                    if(!(posX > 8 || posX < 1 || posY > 8 || posY < 1)){
+                        if(board.getPiece(new ChessPosition(posX,posY)) == null){
                             moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
                             //System.out.println(posX + ", " + posY);
-                            break;
+                        }
+                        else if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() != color){
+                                // if we run into opponents pice
+                                moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                                //System.out.println(posX + ", " + posY);
                         }
                     }
-                }
 
+                }
                 break;
         }
 
