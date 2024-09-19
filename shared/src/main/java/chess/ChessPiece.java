@@ -248,15 +248,19 @@ public class ChessPiece {
                             }
                         }
                         //capture left
-                        if (board.getPiece(new ChessPosition(posY + 1, posX + 1)) != null) {
-                            if (board.getPiece(new ChessPosition(posY + 1, posX + 1)).getTeamColor() != color) {
-                                posMoves.add(new int[]{posY + 1, posX + 1});
+                        if(posX < 8) {
+                            if (board.getPiece(new ChessPosition(posY + 1, posX + 1)) != null) {
+                                if (board.getPiece(new ChessPosition(posY + 1, posX + 1)).getTeamColor() != color) {
+                                    posMoves.add(new int[]{posY + 1, posX + 1});
+                                }
                             }
                         }
                         //capture right
-                        if (board.getPiece(new ChessPosition(posY + 1, posX - 1)) != null) {
-                            if (board.getPiece(new ChessPosition(posY + 1, posX - 1)).getTeamColor() != color) {
-                                posMoves.add(new int[]{posY + 1, posX - 1});
+                        if(posX > 1) {
+                            if (board.getPiece(new ChessPosition(posY + 1, posX - 1)) != null) {
+                                if (board.getPiece(new ChessPosition(posY + 1, posX - 1)).getTeamColor() != color) {
+                                    posMoves.add(new int[]{posY + 1, posX - 1});
+                                }
                             }
                         }
 
@@ -274,15 +278,19 @@ public class ChessPiece {
                             }
                         }
                         //capture left
-                        if (board.getPiece(new ChessPosition(posY - 1, posX + 1)) != null) {
-                            if (board.getPiece(new ChessPosition(posY - 1, posX + 1)).getTeamColor() != color) {
-                                posMoves.add(new int[]{posY - 1, posX + 1});
+                        if(posX < 8) {
+                            if (board.getPiece(new ChessPosition(posY - 1, posX + 1)) != null) {
+                                if (board.getPiece(new ChessPosition(posY - 1, posX + 1)).getTeamColor() != color) {
+                                    posMoves.add(new int[]{posY - 1, posX + 1});
+                                }
                             }
                         }
                         //capture right
-                        if (board.getPiece(new ChessPosition(posY - 1, posX - 1)) != null) {
-                            if (board.getPiece(new ChessPosition(posY - 1, posX - 1)).getTeamColor() != color) {
-                                posMoves.add(new int[]{posY - 1, posX - 1});
+                        if(posX > 1) {
+                            if (board.getPiece(new ChessPosition(posY - 1, posX - 1)) != null) {
+                                if (board.getPiece(new ChessPosition(posY - 1, posX - 1)).getTeamColor() != color) {
+                                    posMoves.add(new int[]{posY - 1, posX - 1});
+                                }
                             }
                         }
                         break;
