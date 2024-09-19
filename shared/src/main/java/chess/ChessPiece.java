@@ -299,6 +299,325 @@ public class ChessPiece {
                     }
                 }
                 break;
+            case ROOK:
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                //move right
+                posX += 1;
+                while(posX <= 8){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 8){
+                        break;
+                    }
+                    posX += 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posX -= 1;
+                while(posX >= 1){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 1){
+                        break;
+                    }
+                    posX -= 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posY -= 1;
+                while(posY >= 1){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posY == 1){
+                        break;
+                    }
+                    posY -= 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posY += 1;
+                while(posY <= 8){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posY == 8){
+                        break;
+                    }
+                    posY += 1;
+                }
+
+                break;
+            case QUEEN:
+                //just do bishop then rook.
+                posX = myPosition.getRow();
+                posY = myPosition.getColumn();
+                //bishop moves up and to the right
+                posX += 1;
+                posY += 1;
+                while(posX <= 8 && posY <= 8){
+                    if(board.getPiece(new ChessPosition(posX,posY)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 8 || posY == 8){
+                        break;
+                    }
+                    posX += 1;
+                    posY += 1;
+                }
+                //bishop moves up and to the left
+                posX = myPosition.getRow() - 1;
+                posY = myPosition.getColumn() + 1;
+                while(posX >= 1 && posY <= 8){
+                    if(board.getPiece(new ChessPosition(posX,posY)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 1 || posY == 8){
+                        break;
+                    }
+                    posX -= 1;
+                    posY += 1;
+                }
+                //bishop moves down and to the left
+                posX = myPosition.getRow() - 1;
+                posY = myPosition.getColumn() - 1;
+                while(posX >= 1 && posY >= 1){
+                    if(board.getPiece(new ChessPosition(posX,posY)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 1 || posY == 1){
+                        break;
+                    }
+                    posX -= 1;
+                    posY -= 1;
+                }
+
+                //bishop moves down and to the right
+                posX = myPosition.getRow() + 1;
+                posY = myPosition.getColumn() - 1;
+                while(posX <= 8 && posY >= 1){
+                    if(board.getPiece(new ChessPosition(posX,posY)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posX,posY)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posX,posY), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 1 || posY == 8){
+                        break;
+                    }
+                    posX += 1;
+                    posY -= 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                //move right
+                posX += 1;
+                while(posX <= 8){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 8){
+                        break;
+                    }
+                    posX += 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posX -= 1;
+                while(posX >= 1){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posX == 1){
+                        break;
+                    }
+                    posX -= 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posY -= 1;
+                while(posY >= 1){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posY == 1){
+                        break;
+                    }
+                    posY -= 1;
+                }
+                posY = myPosition.getRow();
+                posX = myPosition.getColumn();
+                posY += 1;
+                while(posY <= 8){
+                    if(board.getPiece(new ChessPosition(posY,posX)) == null){
+                        moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                        //System.out.println(posX + ", " + posY);
+                    }
+                    else{
+                        if(board.getPiece(new ChessPosition(posY,posX)).getTeamColor() == color){
+                            //if we run into our own piece
+                            break;
+                        }
+                        else{
+                            // if we run into opponents pice
+                            moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
+                            //System.out.println(posX + ", " + posY);
+                            break;
+                        }
+                    }
+                    if(posY == 8){
+                        break;
+                    }
+                    posY += 1;
+                }
+
+
+
+
+                break;
 
 
         }
