@@ -58,9 +58,15 @@ public class ChessGame {
             moveList = board.getPiece(startPosition).pieceMoves(board, startPosition);
         }
         for(ChessMove m: moveList){
-            ChessBoard temp = board;
-
+            ChessBoard temp = makeIllegalMove(board, m);
+            if(!isInCheckIllegal(teamTurn, temp)){
+                System.out.println(m.getEndPosition().getColumn());
+                System.out.println(m.getEndPosition().getRow());
+                System.out.println();
+                valid.add(m);
+            }
         }
+        return valid;
     }
 
     /**
@@ -142,7 +148,7 @@ public class ChessGame {
 
     //does the piece at spot, attack the target?
     private boolean attacksSquare(ChessPosition target, ChessPosition spot){
-        Collection<ChessMove> moveList = validMoves(spot);
+        Collection<ChessMove> moveList = board.getPiece(spot).pieceMoves(board, spot);
         return isInList(target, moveList);
     }
 
@@ -194,8 +200,31 @@ public class ChessGame {
     }
 
     private ChessBoard makeIllegalMove(ChessBoard b, ChessMove m){
-        ChessBoard temp = new ChessBoard();
+        ChessBoard temp = b;
+        ChessPiece cp = board.getPiece(m.getStartPosition());
+        temp.addPiece(m.getStartPosition(), cp);
+        temp.addPiece(m.getEndPosition(), null);
         return temp;
+    }
+
+    public boolean isInCheckIllegal(TeamColor teamColor, ChessBoard b) {
+        ChessPosition kingLoc = kingLocation(b, teamColor);
+        TeamColor other;
+        //gets the other teams color
+        if(teamColor == TeamColor.WHITE){
+            other = TeamColor.BLACK;
+        }else{
+            other = TeamColor.WHITE;
+        }
+
+        ArrayList<ChessPosition> opposingPieces = teamPieces(b,other);
+        //checks to see if an opposing piece attacks the kingLoc
+        for(int i = 0; i < opposingPieces.size();i++){
+            if(attacksSquare(kingLoc, opposingPieces.get(i))){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
