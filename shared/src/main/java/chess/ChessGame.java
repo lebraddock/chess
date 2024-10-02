@@ -49,11 +49,17 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        Collection<ChessMove> moveList;
+        Collection<ChessMove> valid = new ArrayList<ChessMove>();
         if(board.getPiece(startPosition) == null){
             return null;
         }
         else{
-            return board.getPiece(startPosition).pieceMoves(board, startPosition);
+            moveList = board.getPiece(startPosition).pieceMoves(board, startPosition);
+        }
+        for(ChessMove m: moveList){
+            ChessBoard temp = board;
+
         }
     }
 
@@ -74,8 +80,23 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+        ChessPosition kingLoc = kingLocation(board, teamColor);
+        TeamColor other;
+        //gets the other teams color
+        if(teamColor == TeamColor.WHITE){
+            other = TeamColor.BLACK;
+        }else{
+            other = TeamColor.WHITE;
+        }
 
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessPosition> opposingPieces = teamPieces(board,other);
+        //checks to see if an opposing piece attacks the kingLoc
+        for(int i = 0; i < opposingPieces.size();i++){
+            if(attacksSquare(kingLoc, opposingPieces.get(i))){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -105,7 +126,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -118,11 +139,14 @@ public class ChessGame {
     }
 
     //private helper functions
-    private boolean attacksSquare(ChessPosition target, ChessPosition spot{
+
+    //does the piece at spot, attack the target?
+    private boolean attacksSquare(ChessPosition target, ChessPosition spot){
         Collection<ChessMove> moveList = validMoves(spot);
         return isInList(target, moveList);
     }
 
+    //is the target in movelist?
     private boolean isInList(ChessPosition target, Collection<ChessMove> moveList){
         ArrayList<ChessPosition> positions = new ArrayList<ChessPosition>();
         //gets list of squares
@@ -138,5 +162,40 @@ public class ChessGame {
         }
         return rVal;
     }
-    
+
+    //returns the location of all the pieces for a team. Used for isCheck, and is Checkmate
+    private ArrayList<ChessPosition> teamPieces(ChessBoard b, TeamColor c){
+        ArrayList<ChessPosition> totalPieces = new ArrayList<ChessPosition>();
+        for(int y = 1; y<= 8; y++){
+            for(int x = 1; x <=8; x++){
+                if(b.getPiece(new ChessPosition(y,x)) != null){
+                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c){
+                        totalPieces.add(new ChessPosition(y,x));
+                    }
+                }
+            }
+        }
+        return totalPieces;
+    }
+    //returns the location of a teams king
+    private ChessPosition kingLocation(ChessBoard b, TeamColor c){
+        for(int y = 1; y<= 8; y++){
+            for(int x = 1; x <=8; x++){
+                if(b.getPiece(new ChessPosition(y,x)) != null){
+                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c){
+                        if(b.getPiece(new ChessPosition(y,x)).getPieceType() == ChessPiece.PieceType.KING) {
+                            return new ChessPosition(y, x);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private ChessBoard makeIllegalMove(ChessBoard b, ChessMove m){
+        ChessBoard temp = new ChessBoard();
+        return temp;
+    }
+
 }

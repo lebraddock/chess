@@ -73,6 +73,7 @@ public class ChessBoard {
         addPiece(new ChessPosition(8, 6), new ChessPiece(ChessGame.TeamColor.BLACK, ChessPiece.PieceType.BISHOP));
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
