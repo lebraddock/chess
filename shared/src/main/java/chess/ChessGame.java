@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -73,6 +74,7 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
+
         throw new RuntimeException("Not implemented");
     }
 
@@ -114,4 +116,27 @@ public class ChessGame {
     public ChessBoard getBoard() {
         throw new RuntimeException("Not implemented");
     }
+
+    //private helper functions
+    private boolean attacksSquare(ChessPosition target, ChessPosition spot{
+        Collection<ChessMove> moveList = validMoves(spot);
+        return isInList(target, moveList);
+    }
+
+    private boolean isInList(ChessPosition target, Collection<ChessMove> moveList){
+        ArrayList<ChessPosition> positions = new ArrayList<ChessPosition>();
+        //gets list of squares
+        for(ChessMove e: moveList){
+            positions.add(e.getEndPosition());
+        }
+        boolean rVal = false;
+        //sees if the piece targets the position
+        for(int i = 0; i < positions.size(); i++){
+            if(positions.get(i) == target){
+                rVal = true;
+            }
+        }
+        return rVal;
+    }
+    
 }
