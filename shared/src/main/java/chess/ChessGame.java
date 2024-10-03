@@ -49,6 +49,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+        TeamColor tempColor;
         Collection<ChessMove> moveList;
         Collection<ChessMove> valid = new ArrayList<ChessMove>();
         if(board.getPiece(startPosition) == null){
@@ -56,13 +57,11 @@ public class ChessGame {
         }
         else{
             moveList = board.getPiece(startPosition).pieceMoves(board, startPosition);
+            tempColor = board.getPiece(startPosition).getTeamColor();
         }
         for(ChessMove m: moveList){
             ChessBoard temp = makeIllegalMove(board, m);
-            if(!isInCheckIllegal(teamTurn, temp)){
-                System.out.println(m.getEndPosition().getColumn());
-                System.out.println(m.getEndPosition().getRow());
-                System.out.println();
+            if(!isInCheckIllegal(tempColor, temp)){
                 valid.add(m);
             }
         }
@@ -98,7 +97,7 @@ public class ChessGame {
         ArrayList<ChessPosition> opposingPieces = teamPieces(board,other);
         //checks to see if an opposing piece attacks the kingLoc
         for(int i = 0; i < opposingPieces.size();i++){
-            if(attacksSquare(kingLoc, opposingPieces.get(i))){
+            if(attacksSquare(board, kingLoc, opposingPieces.get(i))){
                 return true;
             }
         }
@@ -147,8 +146,9 @@ public class ChessGame {
     //private helper functions
 
     //does the piece at spot, attack the target?
-    private boolean attacksSquare(ChessPosition target, ChessPosition spot){
-        Collection<ChessMove> moveList = board.getPiece(spot).pieceMoves(board, spot);
+    private boolean attacksSquare(ChessBoard b, ChessPosition target, ChessPosition spot){
+        //is correct
+        Collection<ChessMove> moveList = b.getPiece(spot).pieceMoves(b, spot);
         return isInList(target, moveList);
     }
 
@@ -162,21 +162,33 @@ public class ChessGame {
         boolean rVal = false;
         //sees if the piece targets the position
         for(int i = 0; i < positions.size(); i++){
-            if(positions.get(i) == target){
+            /*System.out.print(positions.get(i).getRow());
+            System.out.print(", ");
+            System.out.println(positions.get(i).getColumn());
+            System.out.print(target.getRow());
+            System.out.print(", ");
+            System.out.println(target.getColumn());
+            */
+            if(positions.get(i).equals(target)){
+                //System.out.println("Equal");
+
                 rVal = true;
             }
+            //System.out.println(" ");
         }
         return rVal;
     }
 
     //returns the location of all the pieces for a team. Used for isCheck, and is Checkmate
     private ArrayList<ChessPosition> teamPieces(ChessBoard b, TeamColor c){
+        //Checked and works
         ArrayList<ChessPosition> totalPieces = new ArrayList<ChessPosition>();
         for(int y = 1; y<= 8; y++){
             for(int x = 1; x <=8; x++){
                 if(b.getPiece(new ChessPosition(y,x)) != null){
                     if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c){
                         totalPieces.add(new ChessPosition(y,x));
+
                     }
                 }
             }
@@ -200,14 +212,15 @@ public class ChessGame {
     }
 
     private ChessBoard makeIllegalMove(ChessBoard b, ChessMove m){
-        ChessBoard temp = b;
+        ChessBoard temp = b.makeClone();
         ChessPiece cp = board.getPiece(m.getStartPosition());
-        temp.addPiece(m.getStartPosition(), cp);
-        temp.addPiece(m.getEndPosition(), null);
+        temp.addPiece(m.getEndPosition(), cp);
+        temp.addPiece(m.getStartPosition(), null);
         return temp;
     }
 
     public boolean isInCheckIllegal(TeamColor teamColor, ChessBoard b) {
+        //checked and works
         ChessPosition kingLoc = kingLocation(b, teamColor);
         TeamColor other;
         //gets the other teams color
@@ -217,10 +230,11 @@ public class ChessGame {
             other = TeamColor.WHITE;
         }
 
+        //checked and works
         ArrayList<ChessPosition> opposingPieces = teamPieces(b,other);
         //checks to see if an opposing piece attacks the kingLoc
         for(int i = 0; i < opposingPieces.size();i++){
-            if(attacksSquare(kingLoc, opposingPieces.get(i))){
+            if(attacksSquare(b, kingLoc, opposingPieces.get(i))){
                 return true;
             }
         }

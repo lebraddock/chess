@@ -17,6 +17,7 @@ public class ChessBoard {
         
     }
 
+
     /**
      * Adds a chess piece to the chessboard
      *
@@ -36,6 +37,20 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow() - 1][position.getColumn() - 1];
+    }
+
+    public ChessBoard makeClone(){
+        ChessBoard temp = new ChessBoard();
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                ChessPosition tempPosition = new ChessPosition(i, j);
+                if(getPiece(tempPosition) != null){
+                    ChessPiece pt = new ChessPiece(getPiece(tempPosition).getTeamColor(), getPiece(tempPosition).getPieceType());
+                    temp.addPiece(new ChessPosition(i,j), pt);
+                }
+            }
+        }
+        return temp;
     }
 
     /**
@@ -86,4 +101,6 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(squares);
     }
+
+
 }
