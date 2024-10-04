@@ -52,6 +52,9 @@ public class ChessGame {
         TeamColor tempColor;
         Collection<ChessMove> moveList;
         Collection<ChessMove> valid = new ArrayList<ChessMove>();
+        if(board == null){
+            return null;
+        }
         if(board.getPiece(startPosition) == null){
             return null;
         }
@@ -75,7 +78,33 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> possibleMoves = validMoves(move.getStartPosition());
+        boolean isPossible = false;
+        if(possibleMoves != null) {
+            for (ChessMove m : possibleMoves) {
+                if (m.equals(move)) {
+                    isPossible = true;
+                    break;
+                }
+            }
+        }
+        if(isPossible){
+            ChessPiece pp = board.getPiece(move.getStartPosition());
+            if(move.getPromotionPiece() != null){
+                pp = new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece());
+            }
+            board.addPiece(move.getEndPosition(), pp);
+            board.addPiece(move.getStartPosition(), null);
+        } else {
+            throw new InvalidMoveException();
+        }
+
+        if(this.teamTurn == TeamColor.WHITE){
+            this.teamTurn = TeamColor.BLACK;
+        } else {
+            this.teamTurn = TeamColor.WHITE;
+        }
+
     }
 
     /**
@@ -140,7 +169,7 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return this.board;
     }
 
     //private helper functions
