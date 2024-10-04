@@ -80,6 +80,13 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException();
+        }
+        if(board.getPiece(move.getStartPosition()).getTeamColor() != getTeamTurn()){
+            throw new InvalidMoveException();
+        }
+
         Collection<ChessMove> possibleMoves = validMoves(move.getStartPosition());
         boolean isPossible = false;
         if(possibleMoves != null) {
@@ -160,7 +167,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         boolean existsV = existsValidMove(teamColor);
-        if(getTeamTurn() == teamColor && !existsV){
+        if(getTeamTurn() == teamColor && !existsV && !isInCheck(teamColor)){
             return true;
         }
         return false;
