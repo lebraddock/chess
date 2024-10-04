@@ -15,6 +15,8 @@ public class ChessGame {
     private ChessBoard board;
     public ChessGame() {
         this.teamTurn = TeamColor.WHITE;
+        this.board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -140,7 +142,13 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean check = isInCheck(teamColor);
+
+        boolean existsV = existsValidMove(teamColor);
+        if(check && !existsV){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -151,7 +159,11 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean existsV = existsValidMove(teamColor);
+        if(getTeamTurn() == teamColor && !existsV){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -265,6 +277,22 @@ public class ChessGame {
         for(int i = 0; i < opposingPieces.size();i++){
             if(attacksSquare(b, kingLoc, opposingPieces.get(i))){
                 return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean existsValidMove(TeamColor color){
+        for(int i = 1; i <= 8; i++){
+            for(int j = 1; j <= 8; j++){
+                ChessPiece tempP = board.getPiece(new ChessPosition(i,j));
+                if(tempP != null){
+                    if(tempP.getTeamColor() == color){
+                        if(validMoves(new ChessPosition(i, j)).size() != 0){
+                            return true;
+                        }
+                    }
+                }
             }
         }
         return false;
