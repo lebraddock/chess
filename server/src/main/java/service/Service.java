@@ -1,9 +1,10 @@
 package service;
 
 import dataaccess.*;
+import dataaccess.storage.*;
 
 public class Service{
-    protected UserDA userDA = new UserDA;
-    protected GameDA gameDA = new GameDA;
-    protected AuthDA authDA = new AuthDA;
+    protected UserDA userDA = new Users();
+    protected GameDA gameDA = new Games();
+    protected AuthDA authDA = new Auths();
 }

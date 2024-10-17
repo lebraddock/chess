@@ -6,8 +6,8 @@ import models.GameData;
 
 public interface GameDA{
     void clearGames();
-    void createGame(String gameName) throws DataAccessException;
+    void createGame(GameData game) throws DataAccessException;
     void updateGame(GameData game) throws DataAccessException;
-    ChessGame getGame(String gameID) throws DataAccessException;
+    GameData getGame(int gameID) throws DataAccessException;
     List<GameData> getGames() throws DataAccessException;
 }
