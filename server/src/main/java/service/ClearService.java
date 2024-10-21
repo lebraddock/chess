@@ -8,5 +8,4 @@ public class ClearService extends Service{
         gameDA.clearGames();
         authDA.clearAuths();
     }
-
 }
