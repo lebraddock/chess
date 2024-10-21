@@ -3,16 +3,19 @@ import dataaccess.GameDA;
 import models.GameData;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Games implements GameDA{
     List <GameData> gameList = new ArrayList<GameData>();
+    Random rand;
 
     public void clearGames(){
         gameList = new ArrayList<GameData>();
     }
 
-    public void createGame(GameData game){
+    public GameData createGame(GameData game){
         gameList.add(game);
+        return game;
     }
 
     public void updateGame(GameData game){
