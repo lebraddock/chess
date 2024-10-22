@@ -1,6 +1,8 @@
 package dataaccess.storage;
 import dataaccess.GameDA;
 import models.GameData;
+import results.GameResult;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,7 +39,15 @@ public class Games implements GameDA{
         return null;
     }
 
-    public List<GameData> getGames(){
-        return gameList;
+    public List<GameResult> getGames(){
+        List<GameResult> results = new ArrayList<GameResult>();
+        for(int i = 0; i < gameList.size(); i++){
+            results.add(convert(gameList.get(i)));
+        }
+        return results;
+    }
+
+    private GameResult convert(GameData game){
+        return new GameResult(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName());
     }
 }

@@ -46,18 +46,21 @@ public class loginService extends Service{
     public String getAuthToken(String username) throws DataAccessException{
         return authDA.getUserAuth(username).authToken();
     }
-    public List<GameData> getGames(String authToken) throws DataAccessException{
+    public List<GameResult> getGames(String authToken) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
-            throw new DataAccessException("Missing auth token");
+            throw new DataAccessException("Error: unauthorized");
         }
         return gameDA.getGames();
     }
 
     public GameData createGame(String authToken, String gameName) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
-            throw new DataAccessException("Missing auth token");
+            throw new DataAccessException("Error: unauthorized");
         }
-        int gameID = (int)(Math.random() * 1000) + 1;
+        if(gameName == null || authToken == null){
+            throw new DataAccessException("Error: bad request");
+        }
+        int gameID = (int)(Math.random() * 9000) + 999;
         return gameDA.createGame(new GameData(gameID, "", "", gameName, new ChessGame()));
     }
 

@@ -1,6 +1,8 @@
 package handler;
 
 import dataaccess.DataAccessException;
+import models.GameData;
+import requests.createGameRequest;
 import requests.logRequest;
 import service.*;
 import com.google.gson.Gson;
@@ -8,6 +10,7 @@ import spark.*;
 import results.*;
 import models.UserData;
 
+import java.util.List;
 import java.util.Map;
 
 public class Handler{
@@ -85,6 +88,50 @@ public class Handler{
             service.logout(authToken);
             res.status(200);
             return gsonS.toJson("{}");
+        } catch (Exception e){
+            String mes = e.getMessage();
+            errorMes = Map.of("message", mes);
+            if(mes.equals("Error: unauthorized")){
+                res.status(401);
+            } else {
+                res.status(500);
+            }
+        }
+        return gsonS.toJson(errorMes);
+    }
+
+    public static Object createGame(Request req, Response res){
+        createGameRequest gameName;
+        String authToken = req.headers("authorization");
+        gameName = getBody(req, createGameRequest.class);
+        Map<String, String> response;
+        try{
+            GameData gd = service.createGame(authToken, gameName.gameName());
+            res.status(200);
+            response = Map.of("gameID", Integer.toString(gd.gameID()));
+            return gsonS.toJson(response);
+        } catch (Exception e){
+            String mes = e.getMessage();
+            response = Map.of("message", mes);
+            if(mes.equals("Error: bad request")){
+                res.status(400);
+            }else if(mes.equals("Error: unauthorized")){
+                res.status(401);
+            }else{
+                res.status(500);
+            }
+        }
+        return gsonS.toJson(response);
+    }
+
+    public static Object listGames(Request req, Response res){
+        String authToken = req.headers("authorization");
+        Map<String, String> errorMes;
+        Map<String, List<GameResult>> response;
+        try{
+            List<GameResult> gameList = service.getGames(authToken);
+            response = Map.of("games", gameList);
+            return gsonS.toJson(response);
         } catch (Exception e){
             String mes = e.getMessage();
             errorMes = Map.of("message", mes);
