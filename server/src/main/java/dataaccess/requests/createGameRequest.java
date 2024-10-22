@@ -1,3 +1,3 @@
 package dataaccess.requests;
 
-public record createGameRequest(String gameName) {}
+public record CreateGameRequest(String gameName) {}

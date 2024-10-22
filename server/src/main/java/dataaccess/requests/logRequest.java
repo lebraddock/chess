@@ -1,3 +1,3 @@
 package dataaccess.requests;
 
-public record logRequest(String username, String password){}
+public record LogRequest(String username, String password){}

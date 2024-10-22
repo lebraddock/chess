@@ -3,9 +3,9 @@ package server.handler;
 import dataaccess.results.GameResult;
 import dataaccess.results.RegResult;
 import models.GameData;
-import dataaccess.requests.createGameRequest;
-import dataaccess.requests.joinGameRequest;
-import dataaccess.requests.logRequest;
+import dataaccess.requests.CreateGameRequest;
+import dataaccess.requests.JoinGameRequest;
+import dataaccess.requests.LogRequest;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Handler{
     protected static Gson gsonS = new Gson();
-    static loginService service = new loginService();
+    static LoginService service = new LoginService();
 
     private static <T> T getBody(Request request, Class<T> clazz) {
         var body = new Gson().fromJson(request.body(), clazz);
@@ -64,7 +64,7 @@ public class Handler{
 
     public static Object login(Request req, Response res){
         Map<String, String> errorMes;
-        logRequest request = getBody(req, logRequest.class);
+        LogRequest request = getBody(req, LogRequest.class);
         RegResult response;
         String username = request.username();
         String password = request.password();
@@ -104,9 +104,9 @@ public class Handler{
     }
 
     public static Object createGame(Request req, Response res){
-        createGameRequest gameName;
+        CreateGameRequest gameName;
         String authToken = req.headers("authorization");
-        gameName = getBody(req, createGameRequest.class);
+        gameName = getBody(req, CreateGameRequest.class);
         Map<String, String> response;
         try{
             GameData gd = service.createGame(authToken, gameName.gameName());
@@ -149,7 +149,7 @@ public class Handler{
 
     public static Object joinGame(Request req, Response res){
         String authToken = req.headers("authorization");
-        joinGameRequest gReq = getBody(req, joinGameRequest.class);
+        JoinGameRequest gReq = getBody(req, JoinGameRequest.class);
         System.out.println(gReq.playerColor());
         Map <String, String> errorMes;
         try {

@@ -9,7 +9,7 @@ import models.*;
 import java.util.List;
 import java.util.UUID;
 
-public class loginService extends Service{
+public class LoginService extends Service{
 
     public RegResult registerUser(UserData user) throws DataAccessException {
         if (userDA.getUser(user.username()) != null) {
