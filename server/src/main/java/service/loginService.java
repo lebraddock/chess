@@ -3,20 +3,24 @@ package service;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import models.*;
+import results.*;
 
 import java.util.List;
 import java.util.UUID;
 
 public class loginService extends Service{
 
-    public UserData registerUser(UserData user) throws DataAccessException {
-        if (userDA.getUser(user.userName()) != null) {
-            throw new DataAccessException("Username already taken");
+    public RegResult registerUser(UserData user) throws DataAccessException {
+        if (userDA.getUser(user.username()) != null) {
+            throw new DataAccessException("Error: already taken");
+        }
+        if(user.username() == null || user.password() == null || user.email() == null){
+            throw new DataAccessException("Error: bad request");
         }
         userDA.createUser(user);
         String authToken = UUID.randomUUID().toString();
-        authDA.createAuth(new AuthData(user.userName(), authToken));
-        return user;
+        authDA.createAuth(new AuthData(user.username(), authToken));
+        return new RegResult(user.username(), authToken);
     }
     public UserData loginUser(String username, String password) throws DataAccessException{
         if(userDA.getUser(username) == null){

@@ -17,7 +17,7 @@ public class Users implements UserDA{
 
     public UserData getUser(String username){
         for(int i = 0; i < userList.size(); i++){
-            if(userList.get(i).userName().equals(username)){
+            if(userList.get(i).username().equals(username)){
                 return userList.get(i);
             }
         }
