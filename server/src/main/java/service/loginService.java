@@ -64,16 +64,28 @@ public class loginService extends Service{
         return gameDA.createGame(new GameData(gameID, "", "", gameName, new ChessGame()));
     }
 
-    public GameData updateGame(String authToken, ChessGame.TeamColor color, int gameID) throws DataAccessException{
+    public GameData updateGame(String authToken, String color, int gameID) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
-            throw new DataAccessException("Missing auth token");
+            throw new DataAccessException("Error: unauthorized");
         }
-        if(gameDA.getGame(gameID) == null){
-            throw new DataAccessException("Game does not exists");
+        if(gameDA.getGame(gameID) == null || authToken == null || color == null){
+            throw new DataAccessException("Error: bad request");
+        }
+
+        if(color.equals("WHITE")){
+            if(!gameDA.getGame(gameID).whiteUsername().equals("")) {
+                throw new DataAccessException("Error: already taken");
+            }
+        } else if (color.equals("BLACK")){
+            if(!gameDA.getGame(gameID).blackUsername().equals("")) {
+                throw new DataAccessException("Error: already taken");
+            }
+        } else {
+            throw new DataAccessException("Error: bad request");
         }
         GameData game = gameDA.getGame(gameID);
         GameData newGame;
-        if(color == ChessGame.TeamColor.WHITE){
+        if(color.equals("WHITE")){
             newGame = new GameData(gameID, authDA.getAuth(authToken).userName(), game.blackUsername(), game.gameName(), game.game());
         }
         else{

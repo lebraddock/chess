@@ -3,6 +3,7 @@ package handler;
 import dataaccess.DataAccessException;
 import models.GameData;
 import requests.createGameRequest;
+import requests.joinGameRequest;
 import requests.logRequest;
 import service.*;
 import com.google.gson.Gson;
@@ -137,6 +138,30 @@ public class Handler{
             errorMes = Map.of("message", mes);
             if(mes.equals("Error: unauthorized")){
                 res.status(401);
+            } else {
+                res.status(500);
+            }
+        }
+        return gsonS.toJson(errorMes);
+    }
+
+    public static Object joinGame(Request req, Response res){
+        String authToken = req.headers("authorization");
+        joinGameRequest gReq = getBody(req, joinGameRequest.class);
+        System.out.println(gReq.playerColor());
+        Map <String, String> errorMes;
+        try {
+            service.updateGame(authToken, gReq.playerColor(), gReq.gameID());
+            return gsonS.toJson("{}");
+        }catch (Exception e){
+            String mes = e.getMessage();
+            errorMes = Map.of("message", mes);
+            if(mes.equals("Error: unauthorized")){
+                res.status(401);
+            } else if(mes.equals("Error: bad request")) {
+                res.status(400);
+            } else if(mes.equals("Error: already taken")){
+                res.status(403);
             } else {
                 res.status(500);
             }
