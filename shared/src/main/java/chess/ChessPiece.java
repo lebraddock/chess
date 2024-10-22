@@ -170,7 +170,7 @@ public class ChessPiece {
         int posY = myPosition.getRow();
         //rook moves up
         posY += 1;
-        while(posX <= 8 && posY <= 8){
+        while(posY <= 8){
             if(legalPos(board, new ChessPosition(posY, posX)) == 1){
                 moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
             } else if(legalPos(board, new ChessPosition(posY, posX)) == 2){
@@ -179,7 +179,7 @@ public class ChessPiece {
             } else {
                 break;
             }
-            if(posX == 8 || posY == 8){
+            if(posY == 8){
                 break;
             }
             posY += 1;
@@ -187,7 +187,7 @@ public class ChessPiece {
         //rook to the left
         posY = myPosition.getRow();
         posX = myPosition.getColumn() - 1;
-        while(posX >= 1 && posY <= 8){
+        while(posX >= 1){
             if(legalPos(board, new ChessPosition(posY, posX)) == 1){
                 moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
             } else if(legalPos(board, new ChessPosition(posY, posX)) == 2){
@@ -196,7 +196,7 @@ public class ChessPiece {
             } else {
                 break;
             }
-            if(posX == 1 || posY == 8){
+            if(posX == 1){
                 break;
             }
             posX -= 1;
@@ -204,7 +204,7 @@ public class ChessPiece {
         //rook moves down
         posX = myPosition.getColumn();
         posY = myPosition.getRow() - 1;
-        while(posX >= 1 && posY >= 1){
+        while(posY >= 1){
             if(legalPos(board, new ChessPosition(posY, posX)) == 1){
                 moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
             } else if(legalPos(board, new ChessPosition(posY, posX)) == 2){
@@ -213,7 +213,7 @@ public class ChessPiece {
             } else {
                 break;
             }
-            if(posX == 1 || posY == 1){
+            if(posY == 1){
                 break;
             }
             posY -= 1;
@@ -222,7 +222,7 @@ public class ChessPiece {
         //moves to the right
         posY = myPosition.getRow();
         posX = myPosition.getColumn() + 1;
-        while(posX <= 8 && posY >= 1){
+        while(posX <= 8){
             if(legalPos(board, new ChessPosition(posY, posX)) == 1){
                 moves.add(new ChessMove(myPosition, new ChessPosition(posY,posX), null));
             } else if(legalPos(board, new ChessPosition(posY, posX)) == 2){
@@ -231,7 +231,7 @@ public class ChessPiece {
             } else {
                 break;
             }
-            if(posX == 1 || posY == 8){
+            if(posX == 1){
                 break;
             }
             posX += 1;
