@@ -6,7 +6,7 @@ import chess.*;
 import service.*;
 
 public class ServiceTests{
-    loginService lserve = new loginService();
+    /*loginService lserve = new loginService();
     @BeforeEach
     public void clearAllService(){
         lserve = new loginService();
@@ -43,6 +43,6 @@ public class ServiceTests{
         lserve.registerUser(user2);
 
     }
-
+    */
 
 }

@@ -66,8 +66,10 @@ public class Handler{
         Map<String, String> errorMes;
         logRequest request = getBody(req, logRequest.class);
         RegResult response;
+        String username = request.username();
+        String password = request.password();
         try{
-            response = service.loginUser(request);
+            response = service.loginUser(username, password);
             res.status(200);
             return gsonS.toJson(response);
         } catch (Exception e){
@@ -88,7 +90,7 @@ public class Handler{
         try{
             service.logout(authToken);
             res.status(200);
-            return gsonS.toJson("{}");
+            return gsonS.toJson(null);
         } catch (Exception e){
             String mes = e.getMessage();
             errorMes = Map.of("message", mes);
@@ -152,7 +154,7 @@ public class Handler{
         Map <String, String> errorMes;
         try {
             service.updateGame(authToken, gReq.playerColor(), gReq.gameID());
-            return gsonS.toJson("{}");
+            return gsonS.toJson(null);
         }catch (Exception e){
             String mes = e.getMessage();
             errorMes = Map.of("message", mes);

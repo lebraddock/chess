@@ -23,11 +23,9 @@ public class loginService extends Service{
         authDA.createAuth(new AuthData(user.username(), authToken));
         return new RegResult(user.username(), authToken);
     }
-    public RegResult loginUser(logRequest request) throws DataAccessException{
-        String username = request.username();
-        String password = request.password();
+    public RegResult loginUser(String username, String password) throws DataAccessException{
         if(userDA.getUser(username) == null){
-            throw new DataAccessException("User does not exist!");
+            throw new DataAccessException("Error: unauthorized");
         }
         UserData userTemp = userDA.getUser(username);
         if(!userTemp.password().equals(password)){
@@ -61,7 +59,7 @@ public class loginService extends Service{
             throw new DataAccessException("Error: bad request");
         }
         int gameID = (int)(Math.random() * 9000) + 999;
-        return gameDA.createGame(new GameData(gameID, "", "", gameName, new ChessGame()));
+        return gameDA.createGame(new GameData(gameID, null, null, gameName, new ChessGame()));
     }
 
     public GameData updateGame(String authToken, String color, int gameID) throws DataAccessException{
@@ -73,11 +71,11 @@ public class loginService extends Service{
         }
 
         if(color.equals("WHITE")){
-            if(!gameDA.getGame(gameID).whiteUsername().equals("")) {
+            if(!(gameDA.getGame(gameID).whiteUsername() == null)) {
                 throw new DataAccessException("Error: already taken");
             }
         } else if (color.equals("BLACK")){
-            if(!gameDA.getGame(gameID).blackUsername().equals("")) {
+            if(!(gameDA.getGame(gameID).blackUsername() == null)) {
                 throw new DataAccessException("Error: already taken");
             }
         } else {
