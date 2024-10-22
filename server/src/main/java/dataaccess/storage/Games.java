@@ -1,7 +1,7 @@
 package dataaccess.storage;
 import dataaccess.GameDA;
 import models.GameData;
-import results.GameResult;
+import dataaccess.results.GameResult;
 
 import java.util.List;
 import java.util.ArrayList;

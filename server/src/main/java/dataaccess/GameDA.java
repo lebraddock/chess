@@ -1,9 +1,8 @@
 package dataaccess;
 
-import chess.*;
 import java.util.List;
 import models.GameData;
-import results.GameResult;
+import dataaccess.results.GameResult;
 
 public interface GameDA{
     void clearGames();

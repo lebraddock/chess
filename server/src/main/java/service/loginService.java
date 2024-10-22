@@ -2,9 +2,9 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
+import dataaccess.results.GameResult;
+import dataaccess.results.RegResult;
 import models.*;
-import requests.logRequest;
-import results.*;
 
 import java.util.List;
 import java.util.UUID;

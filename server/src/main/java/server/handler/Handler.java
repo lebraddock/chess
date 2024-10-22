@@ -1,14 +1,14 @@
-package handler;
+package server.handler;
 
-import dataaccess.DataAccessException;
+import dataaccess.results.GameResult;
+import dataaccess.results.RegResult;
 import models.GameData;
-import requests.createGameRequest;
-import requests.joinGameRequest;
-import requests.logRequest;
+import dataaccess.requests.createGameRequest;
+import dataaccess.requests.joinGameRequest;
+import dataaccess.requests.logRequest;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
-import results.*;
 import models.UserData;
 
 import java.util.List;
