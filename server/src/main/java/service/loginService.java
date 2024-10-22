@@ -3,6 +3,7 @@ package service;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import models.*;
+import requests.logRequest;
 import results.*;
 
 import java.util.List;
@@ -22,21 +23,23 @@ public class loginService extends Service{
         authDA.createAuth(new AuthData(user.username(), authToken));
         return new RegResult(user.username(), authToken);
     }
-    public UserData loginUser(String username, String password) throws DataAccessException{
+    public RegResult loginUser(logRequest request) throws DataAccessException{
+        String username = request.username();
+        String password = request.password();
         if(userDA.getUser(username) == null){
             throw new DataAccessException("User does not exist!");
         }
         UserData userTemp = userDA.getUser(username);
         if(!userTemp.password().equals(password)){
-            throw new DataAccessException("Password incorrect!");
+            throw new DataAccessException("Error: unauthorized");
         }
         String authToken = UUID.randomUUID().toString();
         authDA.createAuth(new AuthData(username, authToken));
-        return userTemp;
+        return new RegResult(username, authToken);
     }
     public void logout(String authToken) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
-            throw new DataAccessException("Missing auth token");
+            throw new DataAccessException("Error: unauthorized");
         }
         authDA.deleteAuth(authToken);
     }

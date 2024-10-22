@@ -1,6 +1,7 @@
 package handler;
 
 import dataaccess.DataAccessException;
+import requests.logRequest;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
@@ -20,12 +21,6 @@ public class Handler{
         }
         return body;
     }
-
-    protected String toHTTP(Class classTemp){
-        String json = gsonS.toJson(classTemp);
-        return json;
-    }
-
 
 
     public static Object register(Request req, Response res){
@@ -65,7 +60,41 @@ public class Handler{
 
     public static Object login(Request req, Response res){
         Map<String, String> errorMes;
+        logRequest request = getBody(req, logRequest.class);
+        RegResult response;
+        try{
+            response = service.loginUser(request);
+            res.status(200);
+            return gsonS.toJson(response);
+        } catch (Exception e){
+            String mes = e.getMessage();
+            errorMes = Map.of("message", mes);
+            if(mes.equals("Error: unauthorized")){
+                res.status(401);
+            }else{
+                res.status(500);
+            }
+        }
+        return gsonS.toJson(errorMes);
+    }
 
+    public static Object logout(Request req, Response res){
+        String authToken = req.headers("authorization");
+        Map<String, String> errorMes;
+        try{
+            service.logout(authToken);
+            res.status(200);
+            return gsonS.toJson("{}");
+        } catch (Exception e){
+            String mes = e.getMessage();
+            errorMes = Map.of("message", mes);
+            if(mes.equals("Error: unauthorized")){
+                res.status(401);
+            } else {
+                res.status(500);
+            }
+        }
+        return gsonS.toJson(errorMes);
     }
 
 
