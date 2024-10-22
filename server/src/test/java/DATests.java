@@ -47,5 +47,13 @@ public class DATests{
         authList.deleteAuth("1234abcd");
         Assertions.assertEquals(null, authList.getAuth("1234abcd"));
     }
+    @Test
+    public void getAuthTest(){
+        AuthData temp = new AuthData("cam", "1234abcd");
+        authList.createAuth(temp);
+        AuthData value = authList.getUserAuth("cam");
+        Assertions.assertEquals(temp, value);
+    }
+
 
 }

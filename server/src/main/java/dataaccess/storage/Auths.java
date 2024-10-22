@@ -3,6 +3,7 @@ import dataaccess.AuthDA;
 import models.AuthData;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Auths implements AuthDA{
     List<AuthData> authList = new ArrayList<AuthData>();
@@ -30,5 +31,14 @@ public class Auths implements AuthDA{
                 break;
             }
         }
+    }
+
+    public AuthData getUserAuth(String username){
+        for(int i = 0; i < authList.size(); i++){
+            if(authList.get(i).userName().equals(username)){
+                return authList.get(i);
+            }
+        }
+        return null;
     }
 }
