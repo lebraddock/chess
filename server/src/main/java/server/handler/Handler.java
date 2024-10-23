@@ -3,13 +3,11 @@ package server.handler;
 import dataaccess.results.GameResult;
 import dataaccess.results.RegResult;
 import models.GameData;
-import dataaccess.requests.CreateGameRequest;
-import dataaccess.requests.JoinGameRequest;
-import dataaccess.requests.LogRequest;
 import service.*;
 import com.google.gson.Gson;
 import spark.*;
 import models.UserData;
+import dataaccess.requests.*;
 
 import java.util.List;
 import java.util.Map;
