@@ -11,17 +11,8 @@ public class Main {
         System.out.println("♕ 240 Chess Server: " + piece);
         Server server = new Server();
         server.run(8080);
-        /*Spark.port(8080);
-        Spark.staticFiles.location("/web");
-        createRoutes();
-        Spark.awaitInitialization();
-        System.out.println("Listening on port " + 8080);
-        */
+
     }
-    /*
-    private static void createRoutes() {
-        Spark.post("/user", (req, res) -> "Hello BYU!");
-    }
-    */
+
 
 }

@@ -7,7 +7,7 @@ public class Server {
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
-        Spark.staticFiles.location("web");
+        Spark.staticFiles.location("/web");
 
         Spark.post("/user", Handler::register);
         Spark.delete("/db", Handler::clear);

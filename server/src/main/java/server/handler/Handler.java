@@ -70,8 +70,8 @@ public class Handler{
             response = service.loginUser(username, password);
             res.status(200);
             return gsonS.toJson(response);
-        } catch (Exception e){
-            String mes = e.getMessage();
+        } catch (Exception b){
+            String mes = b.getMessage();
             errorMes = Map.of("message", mes);
             if(mes.equals("Error: unauthorized")){
                 res.status(401);
@@ -133,8 +133,8 @@ public class Handler{
             List<GameResult> gameList = service.getGames(authToken);
             response = Map.of("games", gameList);
             return gsonS.toJson(response);
-        } catch (Exception e){
-            String mes = e.getMessage();
+        } catch (Exception b){
+            String mes = b.getMessage();
             errorMes = Map.of("message", mes);
             if(mes.equals("Error: unauthorized")){
                 res.status(401);

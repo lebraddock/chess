@@ -194,8 +194,12 @@ public class ChessGame {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessGame chessGame = (ChessGame) o;
         return teamTurn == chessGame.teamTurn && Objects.equals(board, chessGame.board);
     }
@@ -224,19 +228,11 @@ public class ChessGame {
         boolean rVal = false;
         //sees if the piece targets the position
         for(int i = 0; i < positions.size(); i++){
-            /*System.out.print(positions.get(i).getRow());
-            System.out.print(", ");
-            System.out.println(positions.get(i).getColumn());
-            System.out.print(target.getRow());
-            System.out.print(", ");
-            System.out.println(target.getColumn());
-            */
+
             if(positions.get(i).equals(target)){
-                //System.out.println("Equal");
 
                 rVal = true;
             }
-            //System.out.println(" ");
         }
         return rVal;
     }
@@ -262,10 +258,8 @@ public class ChessGame {
         for(int y = 1; y<= 8; y++){
             for(int x = 1; x <=8; x++){
                 if(b.getPiece(new ChessPosition(y,x)) != null){
-                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c){
-                        if(b.getPiece(new ChessPosition(y,x)).getPieceType() == ChessPiece.PieceType.KING) {
-                            return new ChessPosition(y, x);
-                        }
+                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c && b.getPiece(new ChessPosition(y,x)).getPieceType() == ChessPiece.PieceType.KING){
+                        return new ChessPosition(y, x);
                     }
                 }
             }
@@ -308,10 +302,8 @@ public class ChessGame {
             for(int j = 1; j <= 8; j++){
                 ChessPiece tempP = board.getPiece(new ChessPosition(i,j));
                 if(tempP != null){
-                    if(tempP.getTeamColor() == color){
-                        if(validMoves(new ChessPosition(i, j)).size() != 0){
-                            return true;
-                        }
+                    if(tempP.getTeamColor() == color && validMoves(new ChessPosition(i, j)).size() != 0){
+                        return true;
                     }
                 }
             }
