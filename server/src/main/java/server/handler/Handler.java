@@ -133,8 +133,8 @@ public class Handler{
             List<GameResult> gameList = service.getGames(authToken);
             response = Map.of("games", gameList);
             return gsonS.toJson(response);
-        } catch (Exception b){
-            String mes = b.getMessage();
+        } catch (Exception l){
+            String mes = l.getMessage();
             errorMes = Map.of("message", mes);
             if(mes.equals("Error: unauthorized")){
                 res.status(401);

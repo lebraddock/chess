@@ -15,10 +15,10 @@ import static chess.ChessPiece.PieceType.QUEEN;
  */
 
 public class ChessPiece {
-    private final PieceType Type;
+    private final PieceType type;
     private final ChessGame.TeamColor color;
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-        this.Type = type;
+        this.type = type;
         this.color = pieceColor;
     }
 
@@ -45,7 +45,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return Type;
+        return type;
     }
 
 
@@ -58,7 +58,7 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         Collection<ChessMove> moves = new ArrayList<ChessMove>();
-        switch (Type){
+        switch (type){
 
 
             case BISHOP:
@@ -400,11 +400,11 @@ public class ChessPiece {
             return false;
         }
         ChessPiece that = (ChessPiece) o;
-        return Type == that.Type && color == that.color;
+        return type == that.type && color == that.color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(Type, color);
+        return Objects.hash(type, color);
     }
 }

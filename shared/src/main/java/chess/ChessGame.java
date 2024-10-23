@@ -258,7 +258,8 @@ public class ChessGame {
         for(int y = 1; y<= 8; y++){
             for(int x = 1; x <=8; x++){
                 if(b.getPiece(new ChessPosition(y,x)) != null){
-                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c && b.getPiece(new ChessPosition(y,x)).getPieceType() == ChessPiece.PieceType.KING){
+                    boolean t = b.getPiece(new ChessPosition(y,x)).getPieceType() == ChessPiece.PieceType.KING;
+                    if(b.getPiece(new ChessPosition(y,x)).getTeamColor() == c && t){
                         return new ChessPosition(y, x);
                     }
                 }
