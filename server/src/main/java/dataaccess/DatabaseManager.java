@@ -48,6 +48,17 @@ public class DatabaseManager {
         }
     }
 
+    private static void configureDB() throws DataAccessException {
+        try {
+            DatabaseManager.createDatabase();
+            DatabaseManager.createUserTable();
+            DatabaseManager.createAuthTable();
+            DatabaseManager.createGameTable();
+        } catch (DataAccessException e){
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
     /**
      * Create a connection to the database and sets the catalog based upon the
      * properties specified in db.properties. Connections to the database should
