@@ -43,7 +43,59 @@ public class DatabaseManager {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public static void createUserTable() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            String statement = """
+                    CREATE TABLE IF NOT EXISTS users(
+                    username VARCHAR(255) NOT NULL,
+                    password VARCHAR(255) NOT NULL,
+                    email VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (username)
+                    )""";
+            try (var prepStatement = conn.prepareStatement(statement)){
+                prepStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public static void createAuthTable() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            String statement = """
+                    CREATE TABLE IF NOT EXISTS users(
+                    username VARCHAR(255) NOT NULL,
+                    authToken VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (authToken)
+                    )""";
+            try (var prepStatement = conn.prepareStatement(statement)){
+                prepStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
+    public static void createGameTable() throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()){
+            String statement = """
+                    CREATE TABLE IF NOT EXISTS users(
+                    gameID INT NOT NULL AUTO_INCREMENT,
+                    whiteUsername VARCHAR(255) NOT NULL,
+                    blackUsername VARCHAR(255) NOT NULL,
+                    gameName VARCHAR(255) NOT NULL,
+                    game VARCHAR(255) NOT NULL,
+                    PRIMARY KEY (gameID)
+                    )""";
+            try (var prepStatement = conn.prepareStatement(statement)){
+                prepStatement.executeUpdate();
+            }
+        } catch (Exception e) {
             throw new DataAccessException(e.getMessage());
         }
     }
