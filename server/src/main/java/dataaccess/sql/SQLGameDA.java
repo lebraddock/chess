@@ -54,11 +54,12 @@ public class SQLGameDA implements GameDA{
             if(gameName.matches("^[^;]*$") && whiteUsername.matches("^[^;]*$") && blackUsername.matches("^[^;]*$")){
                 statement = "UPDATE games SET gameName = ?, whiteUsername = ?, blackUsername = ?, chessGame = ? WHERE gameID = ?";
                 try (var prepStatement = conn.prepareStatement(statement)) {
+
                     prepStatement.setString(1, gameName);
                     prepStatement.setString(2, whiteUsername);
                     prepStatement.setString(3, blackUsername);
                     prepStatement.setString(4, chessGameS);
-                    prepStatement.setInt(1, gameID);
+                    prepStatement.setInt(5, gameID);
                     prepStatement.executeUpdate();
                 }
             }
@@ -69,7 +70,7 @@ public class SQLGameDA implements GameDA{
 
     public GameData getGame(int gameID) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()){
-            String statement = "SELECT gameName, whiteUsername, blackUsername, game from games WHERE gameID = ?";
+            String statement = "SELECT gameName, whiteUsername, blackUsername, chessGame from games WHERE gameID = ?";
             try(var prepStatement = conn.prepareStatement(statement)){
                 prepStatement.setInt(1, gameID);
                 try(ResultSet result = prepStatement.executeQuery()){
@@ -77,7 +78,7 @@ public class SQLGameDA implements GameDA{
                         String gameName = result.getString("gameName");
                         String whiteUsername = result.getString("whiteUsername");
                         String blackUsername = result.getString("blackUsername");
-                        String game = result.getString("game");
+                        String game = result.getString("chessGame");
                         ChessGame chessGame = gsonS.fromJson(game, ChessGame.class);
                         return new GameData(gameID, whiteUsername, blackUsername, gameName, chessGame);
                     }
@@ -92,14 +93,14 @@ public class SQLGameDA implements GameDA{
     public List<GameResult> getGames() throws DataAccessException {
         List<GameResult> results = new ArrayList<GameResult>();
         try(var conn = DatabaseManager.getConnection()){
-            String statement = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+            String statement = "SELECT gameID, whiteUsername, blackUsername, gameName, chessGame FROM games";
             try(var prepStatement = conn.prepareStatement(statement)){
                 try(ResultSet result = prepStatement.executeQuery()){
                     while(result.next()){
                         String gameName = result.getString("gameName");
                         String whiteUsername = result.getString("whiteUsername");
                         String blackUsername = result.getString("blackUsername");
-                        ChessGame game = gsonS.fromJson(result.getString("game"), ChessGame.class);
+                        ChessGame game = gsonS.fromJson(result.getString("chessGame"), ChessGame.class);
                         int gameID = result.getInt("gameID");
                         GameData temp = new GameData(gameID, whiteUsername, blackUsername, gameName, game);
                         results.add(convert(temp));
