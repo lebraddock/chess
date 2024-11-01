@@ -93,9 +93,12 @@ public class LoginService extends Service{
         return newGame;
     }
     public void clear(){
-        userDA.clearUsers();
-        gameDA.clearGames();
-        authDA.clearAuths();
+        try {
+            userDA.clearUsers();
+            gameDA.clearGames();
+            authDA.clearAuths();
+        } catch (DataAccessException e){}
+
     }
 
 }
