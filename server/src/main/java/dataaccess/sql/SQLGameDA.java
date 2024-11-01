@@ -29,10 +29,10 @@ public class SQLGameDA implements GameDA{
                 statement = "INSERT INTO games (gameID, gameName, whiteUsername, blackUsername, chessGame) VALUES(?, ?, ?, ?, ?)";
                 try (var prepStatement = conn.prepareStatement(statement)) {
                     prepStatement.setInt(1, gameID);
-                    prepStatement.setString(1, gameName);
-                    prepStatement.setString(2, whiteUsername);
-                    prepStatement.setString(3, blackUsername);
-                    prepStatement.setString(4, chessGameS);
+                    prepStatement.setString(2, gameName);
+                    prepStatement.setString(3, whiteUsername);
+                    prepStatement.setString(4, blackUsername);
+                    prepStatement.setString(5, chessGameS);
                     prepStatement.executeUpdate();
                     return game;
                 }

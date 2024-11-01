@@ -27,6 +27,8 @@ public class DatabaseManager {
                 var host = props.getProperty("db.host");
                 var port = Integer.parseInt(props.getProperty("db.port"));
                 CONNECTION_URL = String.format("jdbc:mysql://%s:%d", host, port);
+
+                configureDB();
             }
         } catch (Exception ex) {
             throw new RuntimeException("unable to process db.properties. " + ex.getMessage());
@@ -68,7 +70,7 @@ public class DatabaseManager {
     public static void createAuthTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
             String statement = """
-                    CREATE TABLE IF NOT EXISTS users(
+                    CREATE TABLE IF NOT EXISTS auths(
                     username VARCHAR(255) NOT NULL,
                     authToken VARCHAR(255) NOT NULL,
                     PRIMARY KEY (authToken)
@@ -84,12 +86,12 @@ public class DatabaseManager {
     public static void createGameTable() throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()){
             String statement = """
-                    CREATE TABLE IF NOT EXISTS users(
+                    CREATE TABLE IF NOT EXISTS games(
                     gameID INT NOT NULL AUTO_INCREMENT,
                     whiteUsername VARCHAR(255) NOT NULL,
                     blackUsername VARCHAR(255) NOT NULL,
                     gameName VARCHAR(255) NOT NULL,
-                    game VARCHAR(255) NOT NULL,
+                    chessGame VARCHAR(10000) NOT NULL,
                     PRIMARY KEY (gameID)
                     )""";
             try (var prepStatement = conn.prepareStatement(statement)){
