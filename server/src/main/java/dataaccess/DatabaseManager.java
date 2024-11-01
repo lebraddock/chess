@@ -88,8 +88,8 @@ public class DatabaseManager {
             String statement = """
                     CREATE TABLE IF NOT EXISTS games(
                     gameID INT NOT NULL AUTO_INCREMENT,
-                    whiteUsername VARCHAR(255) NOT NULL,
-                    blackUsername VARCHAR(255) NOT NULL,
+                    whiteUsername VARCHAR(255) NULL,
+                    blackUsername VARCHAR(255) NULL,
                     gameName VARCHAR(255) NOT NULL,
                     chessGame VARCHAR(10000) NOT NULL,
                     PRIMARY KEY (gameID)

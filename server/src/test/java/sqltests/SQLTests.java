@@ -84,4 +84,11 @@ public class SQLTests{
         AuthData tempA = authDA.getAuth("12341243");
         Assertions.assertEquals(temp, tempA);
     }
+
+    @Test
+    void testDeleteAuth() throws DataAccessException{
+        AuthData temp = new AuthData("cam","12341243");
+        authDA.createAuth(temp);
+        authDA.deleteAuth("12341243");
+    }
 }

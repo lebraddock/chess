@@ -5,6 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.results.GameResult;
 import dataaccess.results.RegResult;
 import models.*;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +29,7 @@ public class LoginService extends Service{
             throw new DataAccessException("Error: unauthorized");
         }
         UserData userTemp = userDA.getUser(username);
-        if(!userTemp.password().equals(password)){
+        if(!BCrypt.checkpw(password, userTemp.password())){
             throw new DataAccessException("Error: unauthorized");
         }
         String authToken = UUID.randomUUID().toString();

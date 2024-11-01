@@ -49,7 +49,7 @@ public class SQLAuthDA implements AuthDA {
 
     public void deleteAuth(String authToken) throws DataAccessException{
         try(var conn = DatabaseManager.getConnection()){
-            String statement = "DELETE username, authToken from auths WHERE authToken = ?";
+            String statement = "DELETE FROM auths WHERE authToken = ?";
             try(var prepStatement = conn.prepareStatement(statement)){
                 prepStatement.setString(1,authToken);
                 prepStatement.executeUpdate();

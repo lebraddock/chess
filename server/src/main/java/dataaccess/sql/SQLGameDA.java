@@ -25,7 +25,7 @@ public class SQLGameDA implements GameDA{
         String chessGameS = gsonS.toJson(game.game());
         String statement;
         try(var conn = DatabaseManager.getConnection()){
-            if(gameName.matches("^[^;]*$") && whiteUsername.matches("^[^;]*$") && blackUsername.matches("^[^;]*$")){
+            if(gameName.matches("^[^;]*$")){
                 statement = "INSERT INTO games (gameID, gameName, whiteUsername, blackUsername, chessGame) VALUES(?, ?, ?, ?, ?)";
                 try (var prepStatement = conn.prepareStatement(statement)) {
                     prepStatement.setInt(1, gameID);
@@ -51,7 +51,7 @@ public class SQLGameDA implements GameDA{
         String chessGameS = gsonS.toJson(game.game());
         String statement;
         try(var conn = DatabaseManager.getConnection()){
-            if(gameName.matches("^[^;]*$") && whiteUsername.matches("^[^;]*$") && blackUsername.matches("^[^;]*$")){
+            if(gameName.matches("^[^;]*$")){
                 statement = "UPDATE games SET gameName = ?, whiteUsername = ?, blackUsername = ?, chessGame = ? WHERE gameID = ?";
                 try (var prepStatement = conn.prepareStatement(statement)) {
 

@@ -97,16 +97,10 @@ public class DATests{
 
 
     @Test
-    void createGame(){
-        String result;
-        try{
-            RegResult r = service.registerUser(user1);
-            service.createGame(r.authToken(), "game");
-            result = "x";
-        } catch(DataAccessException e){
-            result = "o";
-        }
-        Assertions.assertEquals(result, "x");
+    void createGame() throws DataAccessException{
+        service.clear();
+        RegResult r = service.registerUser(user1);
+        service.createGame(r.authToken(), "game");
     }
     @Test
     void createGameFail(){
