@@ -40,12 +40,40 @@ public class SQLTests{
     @Test
     void createUserTest() throws DataAccessException {
         userDA.createUser(user1);
-        userDA.getUser("Cameron");
+        UserData tempUser = userDA.getUser("Cameron");
+        Assertions.assertEquals(user1.email(), tempUser.email());
+    }
+
+    @Test
+    void createUserFail() throws DataAccessException {
+        userDA.createUser(user1);
+        String result;
+        try{
+            userDA.createUser(user1);
+            result = "x";
+        } catch (DataAccessException e){
+            result = "o";
+        }
+        Assertions.assertEquals(result, "o");
     }
 
     @Test
     void testCreateGame() throws DataAccessException{
         GameData r = gameDA.createGame(game1);
+        Assertions.assertEquals(r.gameID(), 1234);
+    }
+
+    @Test
+    void createGameFail() throws DataAccessException{
+        gameDA.createGame(game1);
+        String result;
+        try{
+            gameDA.createGame(game1);
+            result = "x";
+        } catch (DataAccessException e){
+            result = "o";
+        }
+        Assertions.assertEquals(result, "o");
     }
 
     @Test
@@ -55,26 +83,60 @@ public class SQLTests{
     }
 
     @Test
+    void getGameFail() throws DataAccessException{
+        GameData r = gameDA.createGame(game1);
+        GameData t1 = gameDA.getGame(3);
+        Assertions.assertNotEquals(r,t1);
+    }
+
+    @Test
     void testGetAllGames() throws DataAccessException{
         GameData r = gameDA.createGame(game1);
         GameData r2 = gameDA.createGame(game2);
-        List<GameResult> gameResults = gameDA.getGames();
-        for(int i = 0; i < gameResults.size(); i++){
-            System.out.println(gameResults.get(i).gameName());
+        String x = "x";
+        try {
+            List<GameResult> gameResults = gameDA.getGames();
+            for (int i = 0; i < gameResults.size(); i++) {
+                System.out.println(gameResults.get(i).gameName());
+            }
+        } catch(Exception e){
+            x = "o";
         }
+        Assertions.assertEquals(x,"x");
+
     }
+
+    @Test
+    void getAllGamesFail() throws DataAccessException{
+        List<GameResult> gameResults = gameDA.getGames();
+        String x = "x";
+        if(!gameResults.isEmpty()){
+            x = "o";
+        }
+        Assertions.assertEquals(x,"x");
+    }
+
 
     @Test
     void testUpdateGame() throws DataAccessException{
         GameData r = gameDA.createGame(game1);
         GameData game3 = new GameData(1234, "Tony", "Steven", "game", new ChessGame());
         gameDA.updateGame(game3);
+        Assertions.assertEquals(gameDA.getGame(1234), game3);
+    }
+
+    @Test
+    void updateGameFail() throws DataAccessException{
+        GameData r = gameDA.createGame(game1);
+        gameDA.updateGame(game2);
+        Assertions.assertNotEquals(gameDA.getGame(1234), game2);
     }
 
     @Test
     void testCreateAuth() throws DataAccessException{
         AuthData temp = new AuthData("cam","12341243");
         authDA.createAuth(temp);
+        Assertions.assertEquals(authDA.getAuth("12341243"), new AuthData("cam", "12341243"));
     }
 
     @Test
