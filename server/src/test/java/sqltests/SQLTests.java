@@ -138,6 +138,18 @@ public class SQLTests{
         authDA.createAuth(temp);
         Assertions.assertEquals(authDA.getAuth("12341243"), new AuthData("cam", "12341243"));
     }
+    @Test
+    void createAuthFail() throws DataAccessException{
+        String x = "o";
+        try{
+            AuthData temp = new AuthData("cam","12341243");
+            authDA.createAuth(temp);
+            authDA.createAuth(temp);
+        } catch(Exception e){
+            x = "x";
+        }
+        Assertions.assertEquals(x, "x");
+    }
 
     @Test
     void testGetAuth() throws DataAccessException{
@@ -148,9 +160,20 @@ public class SQLTests{
     }
 
     @Test
+    void getAuthFail() throws DataAccessException{
+        AuthData temp = new AuthData("cam","12341243");
+        authDA.createAuth(temp);
+        AuthData t1 = authDA.getAuth("c");
+        Assertions.assertNotEquals(temp, t1);
+    }
+
+    @Test
     void testDeleteAuth() throws DataAccessException{
         AuthData temp = new AuthData("cam","12341243");
         authDA.createAuth(temp);
         authDA.deleteAuth("12341243");
     }
+
+    @Test
+
 }
