@@ -14,7 +14,7 @@ public class DATests{
     UserData user2;
     @BeforeEach
     void b4() {
-        service = new LoginService();
+        service.clear();
         user1 = new UserData("Jon", "1234", "jon@aol.com");
         user2 = new UserData("Tom", "5678", "tom@aol.com");
     }
