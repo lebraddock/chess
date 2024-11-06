@@ -11,7 +11,7 @@ import static ui.EscapeSequences.*;
 
 public class ChessClient{
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-    public void printBoard(){
+    public void printBoardWhite(){
         ChessBoard temp = new ChessBoard();
         temp.resetBoard();
         printHeader(out);
@@ -24,6 +24,20 @@ public class ChessClient{
         printRow(out, 2, temp);
         printRow(out, 1, temp);
         printHeader(out);
+    }
+    public void printBoardBlack(){
+        ChessBoard temp = new ChessBoard();
+        temp.resetBoard();
+        printHeaderReverse(out);
+        printRowRev(out, 1, temp);
+        printRowRev(out, 2, temp);
+        printRowRev(out, 3, temp);
+        printRowRev(out, 4, temp);
+        printRowRev(out, 5, temp);
+        printRowRev(out, 6, temp);
+        printRowRev(out, 7, temp);
+        printRowRev(out, 8, temp);
+        printHeaderReverse(out);
     }
     public static void printRow(PrintStream out, int rowNum, ChessBoard board){
         out.print(RESET_TEXT_COLOR);
@@ -51,8 +65,46 @@ public class ChessClient{
         out.print(" " + rowNum + " ");
         out.println("");
     }
+
+    public static void printRowRev(PrintStream out, int rowNum, ChessBoard board){
+        out.print(RESET_TEXT_COLOR);
+        boolean white = true;
+        if(rowNum % 2 == 0){
+            white = false;
+        }
+        out.print(" " + rowNum + " ");
+        for(int i = 8; i >= 1; i--){
+            if(white){
+                setBGLight(out);
+                white = false;
+            }else{
+                setBGDark(out);
+                white = true;
+            }
+            if(board.getPiece(new ChessPosition(rowNum,i)) != null){
+                out.print(getChessPiece(board.getPiece(new ChessPosition(rowNum, i))));
+            }else{
+                out.print(EMPTY_PIECE);
+            }
+        }
+        resetBG(out);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.print(" " + rowNum + " ");
+        out.println("");
+    }
+
     public static void printHeader(PrintStream out){
         String[] headers = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        out.print("   ");
+        for(int i = 0; i < 8; i++){
+            out.print(" ");
+            out.print(headers[i]);
+            out.print(" ");
+        }
+        out.println();
+    }
+    public static void printHeaderReverse(PrintStream out){
+        String[] headers = {"h", "g", "f", "e", "d", "c", "b", "a"};
         out.print("   ");
         for(int i = 0; i < 8; i++){
             out.print(" ");

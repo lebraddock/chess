@@ -30,7 +30,8 @@ public class ServerFacadeTests {
     @Test
     public void printGame(){
         ChessClient temp = new ChessClient();
-        temp.printBoard();
+        temp.printBoardWhite();
+        temp.printBoardBlack();
     }
 
 }
