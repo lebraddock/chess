@@ -23,6 +23,7 @@ public class ChessClient{
         printRow(out, 3, temp);
         printRow(out, 2, temp);
         printRow(out, 1, temp);
+        printHeader(out);
     }
     public static void printRow(PrintStream out, int rowNum, ChessBoard board){
         out.print(RESET_TEXT_COLOR);
@@ -30,6 +31,7 @@ public class ChessClient{
         if(rowNum % 2 == 0){
             white = true;
         }
+        out.print(" " + rowNum + " ");
         for(int i = 1; i <= 8; i++){
             if(white){
                 setBGLight(out);
@@ -41,18 +43,21 @@ public class ChessClient{
             if(board.getPiece(new ChessPosition(rowNum,i)) != null){
                 out.print(getChessPiece(board.getPiece(new ChessPosition(rowNum, i))));
             }else{
-                out.print("  ");
+                out.print(EMPTY_PIECE);
             }
         }
         resetBG(out);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.print(" " + rowNum + " ");
         out.println("");
     }
     public static void printHeader(PrintStream out){
         String[] headers = {"a", "b", "c", "d", "e", "f", "g", "h"};
+        out.print("   ");
         for(int i = 0; i < 8; i++){
             out.print(" ");
             out.print(headers[i]);
-            out.print("\u2003");
+            out.print(" ");
         }
         out.println();
     }
@@ -65,7 +70,7 @@ public class ChessClient{
         out.print(SET_BG_COLOR_LIGHT_GREY);
     }
     private static void setBGDark(PrintStream out){
-        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_BG_COLOR_DARK_GREEN);
     }
     private static void resetBG(PrintStream out){
         out.print(RESET_BG_COLOR);
@@ -75,47 +80,29 @@ public class ChessClient{
         ChessPiece.PieceType type = piece.getPieceType();
         String r = "";
         if(piece.getTeamColor() == ChessGame.TeamColor.WHITE){
-            switch(type) {
-                case PAWN:
-                    r = WHITE_PAWN;
-                    break;
-                case ROOK:
-                    r = WHITE_ROOK;
-                    break;
-                case BISHOP:
-                    r = WHITE_BISHOP;
-                    break;
-                case KNIGHT:
-                    r = WHITE_KNIGHT;
-                    break;
-                case KING:
-                    r = WHITE_KING;
-                    break;
-                case QUEEN:
-                    r = WHITE_QUEEN;
-                    break;
-            }
+            r = r + SET_TEXT_COLOR_WHITE;
         }else{
-            switch(type) {
-                case PAWN:
-                    r = BLACK_PAWN;
-                    break;
-                case ROOK:
-                    r = BLACK_ROOK;
-                    break;
-                case BISHOP:
-                    r = BLACK_BISHOP;
-                    break;
-                case KNIGHT:
-                    r = BLACK_KNIGHT;
-                    break;
-                case KING:
-                    r = BLACK_KING;
-                    break;
-                case QUEEN:
-                    r = BLACK_QUEEN;
-                    break;
-            }
+            r = r + SET_TEXT_COLOR_DARK_GREY;
+        }
+        switch(type) {
+            case PAWN:
+                r = r + PAWN;
+                break;
+            case ROOK:
+                r =  r + ROOK;
+                break;
+            case BISHOP:
+                r = r + BISHOP;
+                break;
+            case KNIGHT:
+                r = r + KNIGHT;
+                break;
+            case KING:
+                r = r + KING;
+                break;
+            case QUEEN:
+                r = r + QUEEN;
+                break;
         }
         return r;
     }
