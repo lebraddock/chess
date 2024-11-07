@@ -3,6 +3,7 @@ package client;
 import org.junit.jupiter.api.*;
 import server.Server;
 import ui.ChessClient;
+import ui.LoginREPL;
 
 
 public class ServerFacadeTests {
@@ -44,6 +45,13 @@ public class ServerFacadeTests {
     public void printMenu2(){
         ChessClient temp = new ChessClient();
         temp.displayGameMenu();
+    }
+
+    @Test
+    public void repl1Test(){
+        ChessClient temp = new ChessClient();
+        LoginREPL repl = new LoginREPL();
+        repl.loginMenuREPL(temp.getPrintStream());
     }
 
 }

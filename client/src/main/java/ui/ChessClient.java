@@ -7,11 +7,14 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
+
 import static ui.EscapeSequences.*;
 
 public class ChessClient{
 
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+    Scanner scanner = new Scanner(System.in);
 
     public void displayLoginMenu(){
         out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -39,6 +42,8 @@ public class ChessClient{
         out.println("6: Quit");
         out.println("7: Help");
     }
+
+
 
 
     public void printBoardWhite(){
@@ -144,6 +149,10 @@ public class ChessClient{
         out.println();
     }
 
+    public PrintStream getPrintStream(){
+        return out;
+    }
+
     private static void setHeaderColors(PrintStream out){
         out.print(SET_TEXT_COLOR_WHITE);
         out.print(SET_BG_COLOR_BLACK);
@@ -188,4 +197,6 @@ public class ChessClient{
         }
         return r;
     }
+
+
 }
