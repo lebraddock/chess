@@ -34,4 +34,16 @@ public class ServerFacadeTests {
         temp.printBoardBlack();
     }
 
+    @Test
+    public void printMenu1(){
+        ChessClient temp = new ChessClient();
+        temp.displayLoginMenu();
+    }
+
+    @Test
+    public void printMenu2(){
+        ChessClient temp = new ChessClient();
+        temp.displayGameMenu();
+    }
+
 }

@@ -10,7 +10,37 @@ import java.nio.charset.StandardCharsets;
 import static ui.EscapeSequences.*;
 
 public class ChessClient{
+
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+
+    public void displayLoginMenu(){
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
+        out.println("Pick an option to get started:");
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.println("1: Login");
+        out.println("2: Register");
+        out.println("3: Quit");
+        out.println("4: Help");
+    }
+
+    public void displayGameMenu(){
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
+        out.println("Options:");
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.println("1: Create Game");
+        out.println("2: List Games");
+        out.println("3: Join Game");
+        out.println("4: Observe Game");
+        out.println("5: Logout");
+        out.println("6: Quit");
+        out.println("7: Help");
+    }
+
+
     public void printBoardWhite(){
         ChessBoard temp = new ChessBoard();
         temp.resetBoard();
