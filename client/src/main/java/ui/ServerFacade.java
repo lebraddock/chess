@@ -22,6 +22,18 @@ public class ServerFacade{
         this.url = url;
     }
 
+    public String clear(){
+        try {
+            String authToken = "";
+            String path = "/db";
+            makeRequest(path, null, "DELETE", authToken, Map.class);
+            return authToken;
+        } catch (Exception e) {
+            System.out.println("Username already taken");
+        }
+        return "";
+    }
+
     public String register(String username, String password, String email){
         try {
             String authToken = "";
@@ -30,11 +42,9 @@ public class ServerFacade{
             String body = gsonS.toJson(req);
             RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
             authToken = res.authToken();
-            System.out.println(authToken);
             return authToken;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            System.out.println("Username or password is incorrect");
+            System.out.println("Username already taken");
         }
         return username;
     }
@@ -47,7 +57,6 @@ public class ServerFacade{
             String body = gsonS.toJson(req);
             RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
             authToken = res.authToken();
-            System.out.println(authToken);
             return authToken;
         } catch (Exception e) {
             System.out.println(e.getMessage());
