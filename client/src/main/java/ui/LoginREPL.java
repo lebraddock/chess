@@ -4,21 +4,20 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public class LoginREPL{
-    Scanner scanner = new Scanner(System.in);
-    public int loginMenuREPL(PrintStream out){
+
+    public void loginMenuREPL(PrintStream out){
         String output;
+        Scanner scanner = new Scanner(System.in);
         while(true) {
             out.print("[LOGGED OUT]>>> ");
             String line = scanner.nextLine();
             String[] lineS = line.split(" ");
-            if (lineS.length > 2) {
+            if (lineS.length >= 2) {
                 out.println("Error: Too many inputs");
-            } else if (lineS.length < 2) {
-                out.println("Error: Too few inputs");
-            } else if (!isValidInt(lineS[1])) {
+            } else if (!isValidInt(lineS[0])) {
                 out.println("Error: Not a valid input");
             } else {
-                out.println("Yay" + lineS[1]);
+                out.println("Yay" + lineS[0]);
             }
         }
     }
