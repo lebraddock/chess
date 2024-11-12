@@ -1,7 +1,7 @@
 package service;
 
 import dataaccess.DataAccessException;
-import dataaccess.results.RegResult;
+import models.results.RegResult;
 import models.GameData;
 import models.UserData;
 import org.junit.jupiter.api.Assertions;

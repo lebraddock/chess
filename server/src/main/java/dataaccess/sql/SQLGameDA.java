@@ -5,11 +5,9 @@ import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.GameDA;
-import dataaccess.results.GameResult;
-import models.AuthData;
+import models.results.GameResult;
 import models.GameData;
 
-import javax.xml.crypto.Data;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;

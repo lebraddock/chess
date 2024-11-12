@@ -1,15 +1,21 @@
 package ui;
 
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
 public class LoginREPL{
+    String url;
+    ChessClient client;
+    public LoginREPL(String url){
+        this.url = url;
+        this.client = new ChessClient(url);
+    }
+    PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-    ChessClient client = new ChessClient();
-
-    public void loginMenuREPL(PrintStream out){
+    public void loginMenuREPL(){
         String output;
         Scanner scanner = new Scanner(System.in);
         while(true) {
@@ -28,7 +34,7 @@ public class LoginREPL{
         }
     }
 
-    public void loggedInREPL(PrintStream out){
+    public void loggedInREPL(){
         String output;
         Scanner scanner = new Scanner(System.in);
         while(true) {

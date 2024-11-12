@@ -1,7 +1,7 @@
 package server.handler;
 
-import dataaccess.results.GameResult;
-import dataaccess.results.RegResult;
+import models.results.GameResult;
+import models.results.RegResult;
 import models.GameData;
 import models.requests.CreateGameRequest;
 import models.requests.JoinGameRequest;

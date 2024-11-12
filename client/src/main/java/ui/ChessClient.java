@@ -42,7 +42,7 @@ public class ChessClient{
         }else if(value == 2){
             executeLogin();
         }else if(value == 3){
-
+            executeRegister();
         }else{
 
         }
@@ -93,6 +93,25 @@ public class ChessClient{
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
         authToken = server.login(username, password);
+    }
+
+    public void executeRegister(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        if(loginState == 2){
+            out.println("Already Logged In");
+            return;
+        }
+        out.println("Enter Username:");
+        out.print("[LOGGED OUT]>>> ");
+        String username = scanner.nextLine();
+        out.println("Enter Password:");
+        out.print("[LOGGED OUT]>>> ");
+        String password = scanner.nextLine();
+        out.println("Enter Email:");
+        out.print("[LOGGED OUT]>>> ");
+        String email = scanner.nextLine();
+        authToken = server.register(username, password,email);
     }
 
 

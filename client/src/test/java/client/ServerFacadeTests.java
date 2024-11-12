@@ -28,30 +28,7 @@ public class ServerFacadeTests {
         Assertions.assertTrue(true);
     }
 
-    @Test
-    public void printGame(){
-        ChessClient temp = new ChessClient();
-        temp.printBoardWhite();
-        temp.printBoardBlack();
-    }
 
-    @Test
-    public void printMenu1(){
-        ChessClient temp = new ChessClient();
-        temp.displayLoginMenu();
-    }
 
-    @Test
-    public void printMenu2(){
-        ChessClient temp = new ChessClient();
-        temp.displayGameMenu();
-    }
-
-    @Test
-    public void repl1Test(){
-        ChessClient temp = new ChessClient();
-        LoginREPL repl = new LoginREPL();
-        repl.loginMenuREPL(temp.getPrintStream());
-    }
 
 }

@@ -1,3 +1,3 @@
-package dataaccess.results;
+package models.results;
 
 public record CreateGameResponse(String gameID){}

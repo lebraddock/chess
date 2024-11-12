@@ -2,8 +2,7 @@ package sqltests;
 
 import chess.ChessGame;
 import dataaccess.*;
-import dataaccess.results.GameResult;
-import dataaccess.results.RegResult;
+import models.results.GameResult;
 import dataaccess.sql.SQLAuthDA;
 import dataaccess.sql.SQLGameDA;
 import dataaccess.sql.SQLUserDA;
@@ -11,7 +10,6 @@ import models.AuthData;
 import models.GameData;
 import models.UserData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
