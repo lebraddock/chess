@@ -15,6 +15,35 @@ public class ChessClient{
 
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     Scanner scanner = new Scanner(System.in);
+    // 1 is logged out, 2 is logged in
+    int loginState = 1;
+
+    public void evaluateInput(int value){
+        if(loginState == 1){
+            evaluateLoginREPL(value);
+        }else{
+            evaluateGameREPL(value);
+        }
+    }
+
+    public void evaluateLoginREPL(int value){
+        if(!(value >=1 && value <= 4)){
+            return;
+        }
+        if(value == 1){
+            displayLoginMenu();
+        }else if(value == 2){
+
+        }else if(value == 3){
+
+        }else{
+
+        }
+    }
+
+    public void evaluateGameREPL(int value){
+
+    }
 
     public void displayLoginMenu(){
         out.print(SET_BG_COLOR_LIGHT_GREY);
@@ -22,10 +51,10 @@ public class ChessClient{
         out.println("Pick an option to get started:");
         out.print(SET_BG_COLOR_DARK_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
-        out.println("1: Login");
-        out.println("2: Register");
-        out.println("3: Quit");
-        out.println("4: Help");
+        out.println("1: Help");
+        out.println("2: Login");
+        out.println("3: Register");
+        out.println("4: Quit");
     }
 
     public void displayGameMenu(){
