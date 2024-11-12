@@ -12,11 +12,18 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class ChessClient{
-
+    ServerFacade server;
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     Scanner scanner = new Scanner(System.in);
     // 1 is logged out, 2 is logged in
     int loginState = 1;
+    String url;
+    String authToken;
+
+    public ChessClient(String url){
+        this.url = url;
+        server = new ServerFacade(url);
+    }
 
     public void evaluateInput(int value){
         if(loginState == 1){
@@ -33,7 +40,7 @@ public class ChessClient{
         if(value == 1){
             displayLoginMenu();
         }else if(value == 2){
-
+            executeLogin();
         }else if(value == 3){
 
         }else{
@@ -72,7 +79,21 @@ public class ChessClient{
         out.println("7: Help");
     }
 
-
+    public void executeLogin(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        if(loginState == 2){
+            out.println("Already Logged In");
+            return;
+        }
+        out.println("Enter Username:");
+        out.print("[LOGGED OUT]>>> ");
+        String username = scanner.nextLine();
+        out.println("Enter Password:");
+        out.print("[LOGGED OUT]>>> ");
+        String password = scanner.nextLine();
+        authToken = server.login(username, password);
+    }
 
 
     public void printBoardWhite(){
