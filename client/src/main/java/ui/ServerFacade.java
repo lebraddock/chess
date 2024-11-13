@@ -40,35 +40,25 @@ public class ServerFacade{
         return "";
     }
 
-    public String register(String username, String password, String email){
-        try {
-            String authToken = "";
-            String path = "/user";
-            RegRequest req = new RegRequest(username, password, email);
-            String body = gsonS.toJson(req);
-            RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
-            authToken = res.authToken();
-            return authToken;
-        } catch (Exception e) {
-            System.out.println("Username already taken");
-        }
-        return null;
+    public String register(String username, String password, String email) throws Exception{
+        String authToken = "";
+        String path = "/user";
+        RegRequest req = new RegRequest(username, password, email);
+        String body = gsonS.toJson(req);
+        RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
+        authToken = res.authToken();
+        return authToken;
     }
 
-    public String login(String username, String password){
-        try {
-            String authToken = "";
-            String path = "/session";
-            LogRequest req = new LogRequest(username, password);
-            String body = gsonS.toJson(req);
-            RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
-            authToken = res.authToken();
-            return authToken;
-        } catch (Exception e) {
-            System.out.println("Username or password is incorrect");
-        }
-        return null;
-    }
+    public String login(String username, String password) throws Exception{
+        String authToken = "";
+        String path = "/session";
+        LogRequest req = new LogRequest(username, password);
+        String body = gsonS.toJson(req);
+        RegResult res = makeRequest(path, body, "POST", authToken, RegResult.class);
+        authToken = res.authToken();
+        return authToken;
+}
 
     public void logout(String authToken){
         try {
@@ -109,15 +99,14 @@ public class ServerFacade{
         try {
             String path = "/game";
             String body = gsonS.toJson(req);
-            Map<String, Integer> res = makeRequest(path, body, "PUT", authToken, null);
+            makeRequest(path, body, "PUT", authToken, null);
         } catch (Exception e) {
             System.out.println("Error Joining Game");
         }
     }
 
 
-    private <T> T makeRequest(String path, String body, String method, String authToken, Class<T> responseClass){
-        try{
+    private <T> T makeRequest(String path, String body, String method, String authToken, Class<T> responseClass) throws Exception{
             URL reqUrl = (new URI(url + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) reqUrl.openConnection();
             http.setRequestMethod(method);
@@ -127,27 +116,19 @@ public class ServerFacade{
             writeRequestBody(body, http);
             http.connect();
             return readResponseBody(http, responseClass);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        return null;
     }
 
-    private <T> T makeRequest(String path, String body, String method, String authToken, Type responseType){
-        try{
-            URL reqUrl = (new URI(url + path)).toURL();
-            HttpURLConnection http = (HttpURLConnection) reqUrl.openConnection();
-            http.setRequestMethod(method);
-            if (!authToken.isEmpty()) {
-                http.addRequestProperty("authorization", authToken);
-            }
-            writeRequestBody(body, http);
-            http.connect();
-            return readResponseBody(http, responseType);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+    private <T> T makeRequest(String path, String body, String method, String authToken, Type responseType) throws Exception{
+        URL reqUrl = (new URI(url + path)).toURL();
+        HttpURLConnection http = (HttpURLConnection) reqUrl.openConnection();
+        http.setRequestMethod(method);
+        if (!authToken.isEmpty()) {
+            http.addRequestProperty("authorization", authToken);
         }
-        return null;
+        writeRequestBody(body, http);
+        http.connect();
+        return readResponseBody(http, responseType);
+
     }
 
     private static void writeRequestBody(String body, HttpURLConnection http) throws IOException {

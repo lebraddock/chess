@@ -5,9 +5,13 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import models.requests.CreateGameRequest;
+import models.requests.JoinGameRequest;
+import models.results.GameResult;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -59,52 +63,43 @@ public class ChessClient{
         }else if(value == 2){
             executeCreateGame();
         }else if(value == 3){
-            executeRegister();
+            executeListGames();
         }else if(value == 4){
-            executeRegister();
+            executeJoinGame();
         }else if(value == 5){
             executeRegister();
         }else if(value == 6){
             executeLogout();
             return "Finished";
         }else{
-            return "Finished";
+            printBodyText("Incorrect Input");
         }
         return "";
     }
 
     public void displayLoginMenu(){
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
-        out.println("Pick an option to get started:");
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_WHITE);
-        out.println("1: Help");
-        out.println("2: Login");
-        out.println("3: Register");
-        out.println("4: Quit");
+        printHeader("Pick an option to get started:");
+        printBodyText("1: Help");
+        printBodyText("2: Login");
+        printBodyText("3: Register");
+        printBodyText("4: Quit");
     }
 
     public void displayGameMenu(){
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
-        out.println("Options:");
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_WHITE);
-        out.println("1: Help");
-        out.println("2: Create Game");
-        out.println("3: List Games");
-        out.println("4: Join Game");
-        out.println("5: Observe Game");
-        out.println("6: Logout");
-        out.println("7: Quit");
+        printHeader("Options:");
+        printBodyText("1: Help");
+        printBodyText("2: Create Game");
+        printBodyText("3: List Games");
+        printBodyText("4: Join Game");
+        printBodyText("5: Observe Game");
+        printBodyText("6: Logout");
 
     }
 
     public void executeLogout(){
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
-        out.println("Logging out...");
+        printHeader("Logging out...");
         server.logout(authToken);
         authToken = null;
         loginState = 1;
@@ -113,49 +108,114 @@ public class ChessClient{
     public void executeCreateGame(){
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
-        out.println("Enter Game Name:");
+        printBodyText("Enter Game Name:");
         out.print("[LOGGED IN]>>> ");
         String gamename = scanner.nextLine();
         CreateGameRequest req = new CreateGameRequest(gamename);
         int gameID = server.createGame(req, authToken);
     }
 
+    public void executeListGames(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        List<GameResult> chessGames = server.listGames(authToken).get("games");
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_BLACK);
+        out.println("Games:");
+        for(int i = 0; i < chessGames.size(); i++){
+            printOneGame(chessGames.get(i));
+        }
+
+    }
+
+    private void printOneGame(GameResult game){
+        String wName = game.whiteUsername();
+        String bName = game.blackUsername();
+        if(wName == null){
+            wName = "Empty";
+        }
+        if(bName == null){
+            bName = "Empty";
+        }
+        printBodyText("Name: " + game.gameName());
+        printBodyText("ID: " + game.gameID());
+        printBodyText("White Player: " + wName);
+        printBodyText("Black Player: " + bName);
+        printHeader(".................................");
+    }
+
+    public void executeJoinGame(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        printBodyText("Enter game ID or type 1 to list games");
+        out.print("[LOGGED IN]>>> ");
+        String gameIDString = scanner.nextLine();
+        int gameID = Integer.parseInt(gameIDString);
+        if(gameID == 1){
+            executeListGames();
+            executeJoinGame();
+            return;
+        }
+        printBodyText("Enter team color:");
+        printBodyText("   1 for white:");
+        printBodyText("   2 for black:");
+        out.print("[LOGGED IN]>>> ");
+        String colorS = scanner.nextLine();
+        int colorID = Integer.parseInt(colorS);
+        if(colorID == 1){
+            colorS = "WHITE";
+        }else if(colorID == 2){
+            colorS = "BLACK";
+        }
+        JoinGameRequest req = new JoinGameRequest(colorS, gameID);
+        server.joinGame(req, authToken);
+        printHeader("Successfully joined game!");
+    }
+
     public void executeLogin(){
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         if(loginState == 2){
-            out.println("Already Logged In");
+            printHeader("Already Logged In");
             return;
         }
-        out.println("Enter Username:");
+        printBodyText("Enter Username:");
         out.print("[LOGGED OUT]>>> ");
         String username = scanner.nextLine();
-        out.println("Enter Password:");
+        printBodyText("Enter Password:");
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
-        authToken = server.login(username, password);
-        loginState = 2;
+        try {
+            authToken = server.login(username, password);
+            loginState = 2;
+        } catch (Exception e) {
+            printBodyText("Incorrect Username or Password");
+        }
     }
 
     public void executeRegister(){
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         if(loginState == 2){
-            out.println("Already Logged In");
+            printHeader("Already Logged In");
             return;
         }
-        out.println("Enter Username:");
+        printBodyText("Enter Username:");
         out.print("[LOGGED OUT]>>> ");
         String username = scanner.nextLine();
-        out.println("Enter Password:");
+        printBodyText("Enter Password:");
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
-        out.println("Enter Email:");
+        printBodyText("Enter Email:");
         out.print("[LOGGED OUT]>>> ");
         String email = scanner.nextLine();
-        authToken = server.register(username, password,email);
-        if(authToken != null){
-            loginState = 2;
+        try {
+            authToken = server.register(username, password, email);
+            if (authToken != null) {
+                loginState = 2;
+            }
+        }catch (Exception e){
+            printBodyText("Username already taken");
         }
     }
 
@@ -314,6 +374,22 @@ public class ChessClient{
 
     public int getLoginState(){
         return loginState;
+    }
+
+    private void printHeader(String str){
+        out.print(SET_BG_COLOR_LIGHT_GREY);
+        out.print(SET_TEXT_COLOR_DARK_GREY);
+        out.println(str);
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+    }
+
+    private void printBodyText(String str){
+        out.print(SET_BG_COLOR_DARK_GREY);
+        out.print(SET_TEXT_COLOR_WHITE);
+        out.println("   " + str);
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
     }
 
 }
