@@ -18,7 +18,9 @@ public class LoginREPL{
     public void loginMenuREPL(){
         String output;
         Scanner scanner = new Scanner(System.in);
-        while(true) {
+        String result = "";
+        out.println("Welcome to the chess client! Press 1 for help");
+        while(!result.equals("Finished")) {
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[LOGGED OUT]>>> ");
@@ -29,15 +31,21 @@ public class LoginREPL{
             } else if (!isValidInt(lineS[0], 4)) {
                 out.println("Error: Not a valid input");
             } else {
-                client.evaluateInput(Integer.parseInt(lineS[0]));
+                result = client.evaluateInput(Integer.parseInt(lineS[0]));
+            }
+            if(client.getLoginState() == 2){
+                loggedInREPL();
+                out.println("Welcome to the chess client! Press 1 for help");
             }
         }
+        out.println("Exiting program...");
     }
 
     public void loggedInREPL(){
         String output;
+        String result = "";
         Scanner scanner = new Scanner(System.in);
-        while(true) {
+        while(!result.equals("Finished")) {
             out.print("[LOGGED IN]>>> ");
             String line = scanner.nextLine();
             String[] lineS = line.split(" ");
@@ -46,9 +54,10 @@ public class LoginREPL{
             } else if (!isValidInt(lineS[0], 7)) {
                 out.println("Error: Not a valid input");
             } else {
-                out.println("Yay" + lineS[0]);
+                result = client.evaluateInput(Integer.parseInt(lineS[0]));
             }
         }
+        //System.out.println("Logging out...");
     }
 
 

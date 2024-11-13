@@ -70,6 +70,16 @@ public class ServerFacade{
         return null;
     }
 
+    public void logout(String authToken){
+        try {
+            String path = "/session";
+            RegResult res = makeRequest(path, "", "DELETE", authToken, RegResult.class);
+
+        } catch (Exception e) {
+            System.out.println("Failed logout");
+        }
+    }
+
     public Map<String, List<GameResult>> listGames(String authToken){
         try {
             String path = "/game";

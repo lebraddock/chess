@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import models.requests.CreateGameRequest;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -25,17 +26,17 @@ public class ChessClient{
         server = new ServerFacade(url);
     }
 
-    public void evaluateInput(int value){
+    public String evaluateInput(int value){
         if(loginState == 1){
-            evaluateLoginREPL(value);
+            return evaluateLoginREPL(value);
         }else{
-            evaluateGameREPL(value);
+            return evaluateGameREPL(value);
         }
     }
 
-    public void evaluateLoginREPL(int value){
+    public String evaluateLoginREPL(int value){
         if(!(value >=1 && value <= 4)){
-            return;
+            return "";
         }
         if(value == 1){
             displayLoginMenu();
@@ -44,12 +45,32 @@ public class ChessClient{
         }else if(value == 3){
             executeRegister();
         }else{
-
+            return "Finished";
         }
+        return "";
     }
 
-    public void evaluateGameREPL(int value){
-
+    public String evaluateGameREPL(int value){
+        if(!(value >=1 && value <= 7)){
+            return "";
+        }
+        if(value == 1){
+            displayGameMenu();
+        }else if(value == 2){
+            executeCreateGame();
+        }else if(value == 3){
+            executeRegister();
+        }else if(value == 4){
+            executeRegister();
+        }else if(value == 5){
+            executeRegister();
+        }else if(value == 6){
+            executeLogout();
+            return "Finished";
+        }else{
+            return "Finished";
+        }
+        return "";
     }
 
     public void displayLoginMenu(){
@@ -70,13 +91,33 @@ public class ChessClient{
         out.println("Options:");
         out.print(SET_BG_COLOR_DARK_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
-        out.println("1: Create Game");
-        out.println("2: List Games");
-        out.println("3: Join Game");
-        out.println("4: Observe Game");
-        out.println("5: Logout");
-        out.println("6: Quit");
-        out.println("7: Help");
+        out.println("1: Help");
+        out.println("2: Create Game");
+        out.println("3: List Games");
+        out.println("4: Join Game");
+        out.println("5: Observe Game");
+        out.println("6: Logout");
+        out.println("7: Quit");
+
+    }
+
+    public void executeLogout(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.println("Logging out...");
+        server.logout(authToken);
+        authToken = null;
+        loginState = 1;
+    }
+
+    public void executeCreateGame(){
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.println("Enter Game Name:");
+        out.print("[LOGGED IN]>>> ");
+        String gamename = scanner.nextLine();
+        CreateGameRequest req = new CreateGameRequest(gamename);
+        int gameID = server.createGame(req, authToken);
     }
 
     public void executeLogin(){
@@ -93,6 +134,7 @@ public class ChessClient{
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
         authToken = server.login(username, password);
+        loginState = 2;
     }
 
     public void executeRegister(){
@@ -112,6 +154,9 @@ public class ChessClient{
         out.print("[LOGGED OUT]>>> ");
         String email = scanner.nextLine();
         authToken = server.register(username, password,email);
+        if(authToken != null){
+            loginState = 2;
+        }
     }
 
 
@@ -267,5 +312,8 @@ public class ChessClient{
         return r;
     }
 
+    public int getLoginState(){
+        return loginState;
+    }
 
 }
