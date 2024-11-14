@@ -60,46 +60,33 @@ public class ServerFacade{
         return authToken;
 }
 
-    public void logout(String authToken){
-        try {
-            String path = "/session";
-            RegResult res = makeRequest(path, "", "DELETE", authToken, RegResult.class);
-
-        } catch (Exception e) {
-            System.out.println("Failed logout");
-        }
+    public void logout(String authToken) throws Exception{
+        String path = "/session";
+        RegResult res = makeRequest(path, "", "DELETE", authToken, RegResult.class);
     }
 
-    public Map<String, List<GameResult>> listGames(String authToken){
-        try {
-            String path = "/game";
-            Type temp = new TypeToken<Map<String, List<GameResult>>>() {}.getType();
-            Map<String, List<GameResult>> res = makeRequest(path, "", "GET", authToken, temp);
-            return res;
-        } catch (Exception e) {
-            System.out.println("No Games to List");
-        }
-        return null;
+    public Map<String, List<GameResult>> listGames(String authToken) throws Exception {
+        String path = "/game";
+        Type temp = new TypeToken<Map<String, List<GameResult>>>() {
+        }.getType();
+        Map<String, List<GameResult>> res = makeRequest(path, "", "GET", authToken, temp);
+        return res;
     }
 
-    public int createGame(CreateGameRequest req, String authToken){
-        try {
-            String path = "/game";
-            String body = gsonS.toJson(req);
-            Type temp = new TypeToken<Map<String, Integer>>() {}.getType();
-            Map<String, Integer> res = makeRequest(path, body, "POST", authToken, temp);
-            return res.get("gameID");
-        } catch (Exception e) {
-            System.out.println("Not Logged In");
-        }
-        return 0;
+    public int createGame(CreateGameRequest req, String authToken) throws Exception{
+        String path = "/game";
+        String body = gsonS.toJson(req);
+        Type temp = new TypeToken<Map<String, Integer>>() {}.getType();
+        Map<String, Integer> res = makeRequest(path, body, "POST", authToken, temp);
+        return res.get("gameID");
     }
 
     public void joinGame(JoinGameRequest req, String authToken) throws Exception{
         String path = "/game";
         String body = gsonS.toJson(req);
-        makeRequest(path, body, "PUT", authToken, null);
+        makeRequest(path, body, "PUT", authToken, GameResult.class);
     }
+
 
 
     private <T> T makeRequest(String path, String body, String method, String authToken, Class<T> responseClass) throws Exception{

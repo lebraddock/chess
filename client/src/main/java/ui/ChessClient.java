@@ -97,23 +97,34 @@ public class ChessClient{
     }
 
     public void executeViewGame(){
-        printBodyText("Enter game ID or type 1 to list games");
+        int gameID;
+        executeListGames();
+        printBodyText("Enter game number to view games");
         out.print("[LOGGED IN]>>> ");
-        String gameIDString = scanner.nextLine();
-        int gameID = Integer.parseInt(gameIDString);
-        if(gameID == 1){
-            executeListGames();
-            executeViewGame();
+        try {
+            out.print("[LOGGED IN]>>> ");
+            String gameIDString = scanner.nextLine();
+            gameID = Integer.parseInt(gameIDString);
+            gameID = getIDFromNum(gameID);
+
+            printBoardWhite();
+            printBoardBlack();
+        }catch (Exception e){
+            printBodyText("Sorry! Incorrect input");
             return;
         }
 
     }
 
     public void executeLogout(){
-        printHeader("Logging out...");
-        server.logout(authToken);
-        authToken = null;
-        loginState = 1;
+        try {
+            printHeader("Logging out...");
+            server.logout(authToken);
+            authToken = null;
+            loginState = 1;
+        } catch (Exception e) {
+            printBodyText("Sorry! Unable to logout");
+        }
     }
 
     public void executeCreateGame(){
@@ -127,26 +138,31 @@ public class ChessClient{
             int gameID = server.createGame(req, authToken);
             printHeader("Game created!");
             printBodyText("Game name: " + gamename);
-            printBodyText("Game ID: " + gameID);
         } catch (Exception e) {
             printBodyText("Sorry! Game could not be created");
         }
     }
 
-    public void executeListGames(){
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-        List<GameResult> chessGames = server.listGames(authToken).get("games");
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_BLACK);
-        out.println("Games:");
-        if(chessGames.size() == 0){
-            printBodyText("There are no games to display");
-        }else{
-            for (int i = 0; i < chessGames.size(); i++) {
-                printOneGame(chessGames.get(i), i+1);
+    public int executeListGames(){
+        try {
+            out.print(RESET_BG_COLOR);
+            out.print(RESET_TEXT_COLOR);
+            List<GameResult> chessGames = server.listGames(authToken).get("games");
+            out.print(SET_BG_COLOR_LIGHT_GREY);
+            out.print(SET_TEXT_COLOR_BLACK);
+            out.println("Games:");
+            if (chessGames.size() == 0) {
+                printBodyText("There are no games to display");
+            } else {
+                for (int i = 0; i < chessGames.size(); i++) {
+                    printOneGame(chessGames.get(i), i + 1);
+                }
             }
+            return chessGames.size();
+        } catch (Exception e) {
+            printBodyText("No Games to display");
         }
+        return 0;
 
     }
 
@@ -167,32 +183,47 @@ public class ChessClient{
     }
 
     private int getIDFromNum(int num){
-        List<GameResult> chessGames = server.listGames(authToken).get("games");
-        num = num - 1;
-        return chessGames.get(num).gameID();
+        try {
+            List<GameResult> chessGames = server.listGames(authToken).get("games");
+            num = num - 1;
+            return chessGames.get(num).gameID();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public void executeJoinGame(){
-        printBodyText("Enter game number or type 0 to list games");
-        out.print("[LOGGED IN]>>> ");
-        String gameIDString = scanner.nextLine();
-        int gameID = Integer.parseInt(gameIDString);
-        if(gameID == 0){
-            executeListGames();
-            executeJoinGame();
+        int num = executeListGames();
+        String colorS;
+        int gameID;
+        if(num == 0){
             return;
         }
-        gameID = getIDFromNum(gameID);
-        printBodyText("Enter team color:");
-        printBodyText("   1 for white:");
-        printBodyText("   2 for black:");
-        out.print("[LOGGED IN]>>> ");
-        String colorS = scanner.nextLine();
-        int colorID = Integer.parseInt(colorS);
-        if(colorID == 1){
-            colorS = "WHITE";
-        }else if(colorID == 2){
-            colorS = "BLACK";
+        try {
+            printBodyText("Enter game number:");
+            out.print("[LOGGED IN]>>> ");
+            String gameIDString = scanner.nextLine();
+            gameID = Integer.parseInt(gameIDString);
+            gameID = getIDFromNum(gameID);
+            if(gameID == 0){
+                throw new Exception();
+            }
+            printBodyText("Enter team color:");
+            printBodyText("   1 for white:");
+            printBodyText("   2 for black:");
+            out.print("[LOGGED IN]>>> ");
+            colorS = scanner.nextLine();
+            int colorID = Integer.parseInt(colorS);
+            if (colorID == 1) {
+                colorS = "WHITE";
+            } else if (colorID == 2) {
+                colorS = "BLACK";
+            }else{
+                throw new Exception();
+            }
+        }catch (Exception e){
+            printBodyText("Sorry! Incorrect input");
+            return;
         }
         JoinGameRequest req = new JoinGameRequest(colorS, gameID);
         try {
@@ -200,6 +231,7 @@ public class ChessClient{
             printHeader("Successfully joined game!");
         }catch(Exception e){
             String mes = e.getMessage();
+            e.printStackTrace();
             if(mes == null){
                 printBodyText("Sorry! An unknown error occured");
             }else if(mes.contains("400")){
