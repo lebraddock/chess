@@ -95,14 +95,10 @@ public class ServerFacade{
         return 0;
     }
 
-    public void joinGame(JoinGameRequest req, String authToken){
-        try {
-            String path = "/game";
-            String body = gsonS.toJson(req);
-            makeRequest(path, body, "PUT", authToken, null);
-        } catch (Exception e) {
-            System.out.println("Error Joining Game");
-        }
+    public void joinGame(JoinGameRequest req, String authToken) throws Exception{
+        String path = "/game";
+        String body = gsonS.toJson(req);
+        makeRequest(path, body, "PUT", authToken, null);
     }
 
 

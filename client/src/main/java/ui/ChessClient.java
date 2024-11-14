@@ -67,7 +67,7 @@ public class ChessClient{
         }else if(value == 4){
             executeJoinGame();
         }else if(value == 5){
-            executeRegister();
+            executeViewGame();
         }else if(value == 6){
             executeLogout();
             return "Finished";
@@ -96,9 +96,20 @@ public class ChessClient{
 
     }
 
+    public void executeViewGame(){
+        printBodyText("Enter game ID or type 1 to list games");
+        out.print("[LOGGED IN]>>> ");
+        String gameIDString = scanner.nextLine();
+        int gameID = Integer.parseInt(gameIDString);
+        if(gameID == 1){
+            executeListGames();
+            executeViewGame();
+            return;
+        }
+
+    }
+
     public void executeLogout(){
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
         printHeader("Logging out...");
         server.logout(authToken);
         authToken = null;
@@ -111,8 +122,15 @@ public class ChessClient{
         printBodyText("Enter Game Name:");
         out.print("[LOGGED IN]>>> ");
         String gamename = scanner.nextLine();
-        CreateGameRequest req = new CreateGameRequest(gamename);
-        int gameID = server.createGame(req, authToken);
+        try {
+            CreateGameRequest req = new CreateGameRequest(gamename);
+            int gameID = server.createGame(req, authToken);
+            printHeader("Game created!");
+            printBodyText("Game name: " + gamename);
+            printBodyText("Game ID: " + gameID);
+        } catch (Exception e) {
+            printBodyText("Sorry! Game could not be created");
+        }
     }
 
     public void executeListGames(){
@@ -122,13 +140,17 @@ public class ChessClient{
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_BLACK);
         out.println("Games:");
-        for(int i = 0; i < chessGames.size(); i++){
-            printOneGame(chessGames.get(i));
+        if(chessGames.size() == 0){
+            printBodyText("There are no games to display");
+        }else{
+            for (int i = 0; i < chessGames.size(); i++) {
+                printOneGame(chessGames.get(i), i+1);
+            }
         }
 
     }
 
-    private void printOneGame(GameResult game){
+    private void printOneGame(GameResult game, int i){
         String wName = game.whiteUsername();
         String bName = game.blackUsername();
         if(wName == null){
@@ -137,25 +159,30 @@ public class ChessClient{
         if(bName == null){
             bName = "Empty";
         }
+        printBodyText("Game Number: " + i);
         printBodyText("Name: " + game.gameName());
-        printBodyText("ID: " + game.gameID());
         printBodyText("White Player: " + wName);
         printBodyText("Black Player: " + bName);
         printHeader(".................................");
     }
 
+    private int getIDFromNum(int num){
+        List<GameResult> chessGames = server.listGames(authToken).get("games");
+        num = num - 1;
+        return chessGames.get(num).gameID();
+    }
+
     public void executeJoinGame(){
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-        printBodyText("Enter game ID or type 1 to list games");
+        printBodyText("Enter game number or type 0 to list games");
         out.print("[LOGGED IN]>>> ");
         String gameIDString = scanner.nextLine();
         int gameID = Integer.parseInt(gameIDString);
-        if(gameID == 1){
+        if(gameID == 0){
             executeListGames();
             executeJoinGame();
             return;
         }
+        gameID = getIDFromNum(gameID);
         printBodyText("Enter team color:");
         printBodyText("   1 for white:");
         printBodyText("   2 for black:");
@@ -168,8 +195,21 @@ public class ChessClient{
             colorS = "BLACK";
         }
         JoinGameRequest req = new JoinGameRequest(colorS, gameID);
-        server.joinGame(req, authToken);
-        printHeader("Successfully joined game!");
+        try {
+            server.joinGame(req, authToken);
+            printHeader("Successfully joined game!");
+        }catch(Exception e){
+            String mes = e.getMessage();
+            if(mes == null){
+                printBodyText("Sorry! An unknown error occured");
+            }else if(mes.contains("400")){
+                printBodyText("Sorry! Game id does not exist.");
+            }else if(mes.contains("403")){
+                printBodyText("Sorry! Space is already taken.");
+            }else{
+                printBodyText("Sorry! There was an unknown error.");
+            }
+        }
     }
 
     public void executeLogin(){
@@ -215,7 +255,7 @@ public class ChessClient{
                 loginState = 2;
             }
         }catch (Exception e){
-            printBodyText("Username already taken");
+            printBodyText("Sorry! Username already taken");
         }
     }
 

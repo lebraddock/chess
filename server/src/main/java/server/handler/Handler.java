@@ -150,7 +150,6 @@ public class Handler{
     public static Object joinGame(Request req, Response res){
         String authToken = req.headers("authorization");
         JoinGameRequest gReq = getBody(req, JoinGameRequest.class);
-        System.out.println(gReq.playerColor());
         Map <String, String> errorMes;
         try {
             service.updateGame(authToken, gReq.playerColor(), gReq.gameID());
