@@ -320,7 +320,7 @@ public class ChessClient{
         printRowRev(out, 8, temp);
         printHeaderReverse(out);
     }
-    public static void printRow(PrintStream out, int rowNum, ChessBoard board){
+    public void printRow(PrintStream out, int rowNum, ChessBoard board){
         out.print(RESET_TEXT_COLOR);
         boolean white = false;
         if(rowNum % 2 == 0){
@@ -328,18 +328,8 @@ public class ChessClient{
         }
         out.print(" " + rowNum + " ");
         for(int i = 1; i <= 8; i++){
-            if(white){
-                setBGLight(out);
-                white = false;
-            }else{
-                setBGDark(out);
-                white = true;
-            }
-            if(board.getPiece(new ChessPosition(rowNum,i)) != null){
-                out.print(getChessPiece(board.getPiece(new ChessPosition(rowNum, i))));
-            }else{
-                out.print(EMPTY_PIECE);
-            }
+            setColor(white);
+            printPiece(board, rowNum, i);
         }
         resetBG(out);
         out.print(SET_TEXT_COLOR_WHITE);
@@ -347,7 +337,7 @@ public class ChessClient{
         out.println("");
     }
 
-    public static void printRowRev(PrintStream out, int rowNum, ChessBoard board){
+    public void printRowRev(PrintStream out, int rowNum, ChessBoard board){
         out.print(RESET_TEXT_COLOR);
         boolean white = true;
         if(rowNum % 2 == 0){
@@ -355,23 +345,31 @@ public class ChessClient{
         }
         out.print(" " + rowNum + " ");
         for(int i = 8; i >= 1; i--){
-            if(white){
-                setBGLight(out);
-                white = false;
-            }else{
-                setBGDark(out);
-                white = true;
-            }
-            if(board.getPiece(new ChessPosition(rowNum,i)) != null){
-                out.print(getChessPiece(board.getPiece(new ChessPosition(rowNum, i))));
-            }else{
-                out.print(EMPTY_PIECE);
-            }
+            setColor(white);
+            printPiece(board, rowNum, i);
         }
         resetBG(out);
         out.print(SET_TEXT_COLOR_WHITE);
         out.print(" " + rowNum + " ");
         out.println("");
+    }
+
+    private void printPiece(ChessBoard board, int rowNum, int i){
+        if(board.getPiece(new ChessPosition(rowNum,i)) != null){
+            out.print(getChessPiece(board.getPiece(new ChessPosition(rowNum, i))));
+        }else{
+            out.print(EMPTY_PIECE);
+        }
+    }
+
+    private void setColor(Boolean white){
+        if(white){
+            setBGLight();
+            white = false;
+        }else{
+            setBGDark();
+            white = true;
+        }
     }
 
     public static void printHeader(PrintStream out){
@@ -399,14 +397,10 @@ public class ChessClient{
         return out;
     }
 
-    private static void setHeaderColors(PrintStream out){
-        out.print(SET_TEXT_COLOR_WHITE);
-        out.print(SET_BG_COLOR_BLACK);
-    }
-    private static void setBGLight(PrintStream out){
+    private void setBGLight(){
         out.print(SET_BG_COLOR_LIGHT_GREY);
     }
-    private static void setBGDark(PrintStream out){
+    private void setBGDark(){
         out.print(SET_BG_COLOR_DARK_GREEN);
     }
     private static void resetBG(PrintStream out){
@@ -448,7 +442,7 @@ public class ChessClient{
         return loginState;
     }
 
-    private void printHeader(String str){
+    public void printHeader(String str){
         out.print(SET_BG_COLOR_LIGHT_GREY);
         out.print(SET_TEXT_COLOR_DARK_GREY);
         out.println(str);
@@ -456,7 +450,7 @@ public class ChessClient{
         out.print(RESET_TEXT_COLOR);
     }
 
-    private void printBodyText(String str){
+    public void printBodyText(String str){
         out.print(SET_BG_COLOR_DARK_GREY);
         out.print(SET_TEXT_COLOR_WHITE);
         out.println("   " + str);
