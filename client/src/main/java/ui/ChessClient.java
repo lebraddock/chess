@@ -229,13 +229,14 @@ public class ChessClient{
         try {
             server.joinGame(req, authToken);
             printHeader("Successfully joined game!");
+            printBoardWhite();
+            printBoardBlack();
         }catch(Exception e){
             String mes = e.getMessage();
-            e.printStackTrace();
             if(mes == null){
                 printBodyText("Sorry! An unknown error occured");
             }else if(mes.contains("400")){
-                printBodyText("Sorry! Game id does not exist.");
+                printBodyText("Sorry! Game does not exist.");
             }else if(mes.contains("403")){
                 printBodyText("Sorry! Space is already taken.");
             }else{
@@ -328,7 +329,7 @@ public class ChessClient{
         }
         out.print(" " + rowNum + " ");
         for(int i = 1; i <= 8; i++){
-            setColor(white);
+            white = setColor(white);
             printPiece(board, rowNum, i);
         }
         resetBG(out);
@@ -345,7 +346,7 @@ public class ChessClient{
         }
         out.print(" " + rowNum + " ");
         for(int i = 8; i >= 1; i--){
-            setColor(white);
+            white = setColor(white);
             printPiece(board, rowNum, i);
         }
         resetBG(out);
@@ -362,7 +363,7 @@ public class ChessClient{
         }
     }
 
-    private void setColor(Boolean white){
+    private boolean setColor(Boolean white){
         if(white){
             setBGLight();
             white = false;
@@ -370,6 +371,7 @@ public class ChessClient{
             setBGDark();
             white = true;
         }
+        return white;
     }
 
     public static void printHeader(PrintStream out){
