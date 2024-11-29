@@ -77,29 +77,6 @@ public class ChessClient{
         return "";
     }
 
-    public String evaluageInGameREPL(int value){
-        if(!(value >= 1 && value <= 6)){
-            return "";
-        }
-        if(value == 1){
-            printInGameMenu();
-        }else if(value == 2){
-
-        }else if(value == 3){
-
-        }else if(value == 4){
-
-        }else if(value == 5){
-
-        }else if(value == 6){
-
-            return "Finished";
-        }else{
-            printBodyText("Incorrect Input");
-        }
-        return "";
-    }
-
     public void displayLoginMenu(){
         printHeader("Pick an option to get started:");
         printBodyText("1: Help");
@@ -252,8 +229,8 @@ public class ChessClient{
         try {
             server.joinGame(req, authToken);
             printHeader("Successfully joined game!");
-            printBoardWhite();
-            printBoardBlack();
+            GameplayREPL inGameREPL = new GameplayREPL();
+            inGameREPL.gameREPL();
         }catch(Exception e){
             String mes = e.getMessage();
             if(mes == null){
@@ -416,16 +393,6 @@ public class ChessClient{
             out.print(" ");
         }
         out.println();
-    }
-
-    public void printInGameMenu() {
-        printHeader("Options:");
-        printBodyText("1: Help");
-        printBodyText("2: Redraw Board");
-        printBodyText("3: Make Move");
-        printBodyText("4: Show Legal Moves");
-        printBodyText("5: Resign");
-        printBodyText("6: Leave");
     }
 
     public PrintStream getPrintStream(){

@@ -7,16 +7,15 @@ import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
 public class GameplayREPL{
-    ChessClient client;
+    GameClient client;
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-    public GameplayREPL(ChessClient client){
-        this.client = client;
+    public GameplayREPL(){
+        this.client = new GameClient();
     }
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while(!result.equals("Exiting Game...")){
-            client.printInGameMenu();
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
