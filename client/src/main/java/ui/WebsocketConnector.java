@@ -1,6 +1,7 @@
 package ui;
 
-import com.sun.nio.sctp.NotificationHandler;
+import exception.ResponseException;
+import ui.NotificationHandler;
 import messages.Notification;
 import com.google.gson.Gson;
 
