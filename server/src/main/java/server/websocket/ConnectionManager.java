@@ -1,15 +1,18 @@
 package server.websocket;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import messages.Notification;
 
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionManager {
     public final ConcurrentHashMap<Integer, ArrayList<Connection>> connections = new ConcurrentHashMap<>();
+    Gson gsonS = new Gson();
 
     public void add(int gameID, String authToken, Session session) {
         var connection = new Connection(authToken, session);
@@ -24,15 +27,22 @@ public class ConnectionManager {
         }
     }
 
-    public void remove(String visitorName) {
-        connections.remove(visitorName);
+    public void remove(int gameID, String authToken) {
+        ArrayList<Connection> temp = connections.get(gameID);
+        for(int i = 0; i < temp.size(); i++){
+            if(Objects.equals(temp.get(i).getAuthToken(), authToken)){
+                temp.remove(i);
+            }
+        }
+        temp.removeIf(conn -> Objects.equals(conn.authToken, authToken));
     }
 
-    public void broadcast(String excludeVisitorName, Notification notification) throws IOException {
+    public void broadcast(int gameID, String excludeUser, Notification notification) throws IOException {
         var removeList = new ArrayList<Connection>();
-        for (var c : connections.values()) {
+        for (var c : connections.get(gameID)) {
             if (c.session.isOpen()) {
-                if (!c.visitorName.equals(excludeVisitorName)) {
+                if (!c.authToken.equals(excludeUser)) {
+                    String temp = gsonS.toJson(notification, Notification.class);
                     c.send(notification.toString());
                 }
             } else {
@@ -42,7 +52,9 @@ public class ConnectionManager {
 
         // Clean up any connections that were left open.
         for (var c : removeList) {
-            connections.remove(c.visitorName);
+            ArrayList<Connection> temp = connections.get(gameID);
+            temp.remove(c);
+            connections.put(gameID, temp);
         }
     }
 }
