@@ -37,13 +37,12 @@ public class ConnectionManager {
         temp.removeIf(conn -> Objects.equals(conn.authToken, authToken));
     }
 
-    public void broadcast(int gameID, String excludeUser, Notification notification) throws IOException {
+    public void broadcast(int gameID, Session excludeUser, String notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.get(gameID)) {
             if (c.session.isOpen()) {
-                if (!c.authToken.equals(excludeUser)) {
-                    String temp = gsonS.toJson(notification, Notification.class);
-                    c.send(notification.toString());
+                if (c != excludeUser) {
+                    c.send(notification);
                 }
             } else {
                 removeList.add(c);
@@ -55,6 +54,14 @@ public class ConnectionManager {
             ArrayList<Connection> temp = connections.get(gameID);
             temp.remove(c);
             connections.put(gameID, temp);
+        }
+    }
+
+    public void sendMessage(Session session, String message){
+        try {
+            session.getRemote().sendString(message);
+        }catch(Exception e){
+            System.out.println("Session Invalid");
         }
     }
 }

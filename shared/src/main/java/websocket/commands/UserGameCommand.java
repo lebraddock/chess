@@ -23,6 +23,7 @@ public class UserGameCommand {
     }
 
     public enum CommandType {
+        JOIN_GAME,
         CONNECT,
         MAKE_MOVE,
         LEAVE,

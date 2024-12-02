@@ -52,6 +52,10 @@ public class LoginService extends Service{
         return gameDA.getGames();
     }
 
+    public GameData getGame(int gameID) throws DataAccessException{
+        return gameDA.getGame(gameID);
+    }
+
     public GameData createGame(String authToken, String gameName) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
             throw new DataAccessException("Error: unauthorized");
@@ -92,6 +96,14 @@ public class LoginService extends Service{
         }
         gameDA.updateGame(newGame);
         return newGame;
+    }
+
+    public String getName(String authToken){
+        try {
+            return authDA.getAuth(authToken).userName();
+        }catch(Exception e){
+            return null;
+        }
     }
     public void clear(){
         try {
