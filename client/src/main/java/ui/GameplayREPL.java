@@ -15,7 +15,7 @@ public class GameplayREPL implements NotificationHandler{
     public GameplayREPL(String url, String authToken, int gameID, ChessGame.TeamColor color)throws Exception{
         WebsocketConnector ws = new WebsocketConnector(url, this);
         ws.joinGamePlayer(authToken, gameID, color);
-        this.client = new GameClient(ws, color);
+        this.client = new GameClient(ws, color, authToken, gameID);
     }
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);

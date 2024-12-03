@@ -1,12 +1,10 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -18,10 +16,14 @@ public class GameClient{
     private ChessGame.TeamColor color;
     private ChessGame game;
     Scanner scanner = new Scanner(System.in);
+    String authToken;
+    int gameID;
 
-    public GameClient(WebsocketConnector ws, ChessGame.TeamColor color){
+    public GameClient(WebsocketConnector ws, ChessGame.TeamColor color, String authToken, int gameID){
         this.ws = ws;
         this.color = color;
+        this.authToken = authToken;
+        this.gameID = gameID;
         game = new ChessGame();
     }
 
@@ -62,12 +64,26 @@ public class GameClient{
     }
 
     public void makeMove(){
-        printHeader("Enter option: (Press 1 for help)");
+        printHeader("Enter move start position:");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         out.print("[IN GAME]>>> ");
-        String line = scanner.nextLine();
-        
+        String start = scanner.nextLine();
+        printHeader("Enter move end position:");
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print("[IN GAME]>>> ");
+        String end = scanner.nextLine();
+        try{
+            ChessPosition startPos = notationToNum(start);
+            ChessPosition endPos = notationToNum(end);
+            ChessMove move = new ChessMove(startPos, endPos, null);
+            ws.makeMove(authToken, gameID, move);
+        }catch (Exception e){
+            printBodyText("Sorry! Invalid move");
+        }
+
+
     }
 
     public void printBoard() {
@@ -230,7 +246,17 @@ public class GameClient{
         return r;
     }
 
-    private static void resetBG(PrintStream out){
+    private static void resetBG(PrintStream out) throws Exception{
         out.print(RESET_BG_COLOR);
+    }
+
+    ChessPosition notationToNum(String notation) throws Exception{
+        notation = notation.toLowerCase();
+        if(notation.length() != 2){
+            throw new Exception();
+        }
+        int x = notation.charAt(0) - 'a' + 1;
+        int y = notation.charAt(1) - 48;
+        return new ChessPosition(y,x);
     }
 }
