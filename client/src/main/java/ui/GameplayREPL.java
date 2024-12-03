@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessGame;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
@@ -10,9 +12,10 @@ public class GameplayREPL implements NotificationHandler{
     GameClient client;
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
-    public GameplayREPL(String url)throws Exception{
+    public GameplayREPL(String url, String authToken, int gameID, ChessGame.TeamColor color)throws Exception{
         WebsocketConnector ws = new WebsocketConnector(url, this);
-        this.client = new GameClient(ws);
+        ws.joinGamePlayer(authToken, gameID, color);
+        this.client = new GameClient(ws, color);
     }
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);

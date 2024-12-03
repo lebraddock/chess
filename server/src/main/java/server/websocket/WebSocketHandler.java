@@ -3,6 +3,7 @@ package server.websocket;
 import com.google.gson.Gson;
 import models.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.LoginService;
 import websocket.commands.JoinGameCommand;
 import websocket.commands.UserGameCommand;
@@ -12,7 +13,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.*;
 
 import java.io.IOException;
-
+@WebSocket
 public class WebSocketHandler{
     protected static Gson gsonS = new Gson();
     private final ConnectionManager connections = new ConnectionManager();

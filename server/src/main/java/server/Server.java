@@ -1,13 +1,19 @@
 package server;
 
+import server.websocket.WebSocketHandler;
 import spark.*;
 import server.handler.Handler;
 public class Server {
+
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();;
+
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("/web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         Spark.post("/user", Handler::register);
         Spark.delete("/db", Handler::clear);

@@ -14,8 +14,16 @@ import static ui.EscapeSequences.RESET_TEXT_COLOR;
 public class GameClient{
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     private WebsocketConnector ws;
-    public GameClient(WebsocketConnector ws){
+    private ChessGame.TeamColor color;
+    private ChessGame game;
+
+    public GameClient(WebsocketConnector ws, ChessGame.TeamColor color){
         this.ws = ws;
+        this.color = color;
+    }
+
+    public ChessGame.TeamColor getColor(){
+        return color;
     }
 
     public void printInGameMenu() {
@@ -51,12 +59,14 @@ public class GameClient{
     }
 
     public void printBoard() {
-
+        if(color == ChessGame.TeamColor.WHITE){
+            printBoardWhite(game.getBoard());
+        }else{
+            printBoardBlack(game.getBoard());
+        }
     }
 
-    public void printBoardWhite(){
-        ChessBoard temp = new ChessBoard();
-        temp.resetBoard();
+    public void printBoardWhite(ChessBoard temp){
         printHeader(out);
         printRow(out, 8, temp);
         printRow(out, 7, temp);
@@ -68,9 +78,7 @@ public class GameClient{
         printRow(out, 1, temp);
         printHeader(out);
     }
-    public void printBoardBlack(){
-        ChessBoard temp = new ChessBoard();
-        temp.resetBoard();
+    public void printBoardBlack(ChessBoard temp){
         printHeaderReverse(out);
         printRowRev(out, 1, temp);
         printRowRev(out, 2, temp);

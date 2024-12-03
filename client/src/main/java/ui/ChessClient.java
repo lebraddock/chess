@@ -193,6 +193,7 @@ public class ChessClient{
     public void executeJoinGame(){
         int num = executeListGames();
         String colorS;
+        ChessGame.TeamColor tColor;
         int gameID;
         if(num == 0){
             return;
@@ -214,8 +215,10 @@ public class ChessClient{
             int colorID = Integer.parseInt(colorS);
             if (colorID == 1) {
                 colorS = "WHITE";
+                tColor = ChessGame.TeamColor.WHITE;
             } else if (colorID == 2) {
                 colorS = "BLACK";
+                tColor = ChessGame.TeamColor.BLACK;
             }else{
                 throw new Exception();
             }
@@ -227,10 +230,11 @@ public class ChessClient{
         try {
             server.joinGame(req, authToken);
             printHeader("Successfully joined game!");
-            GameplayREPL inGameREPL = new GameplayREPL(url);
+            GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, tColor);
             inGameREPL.gameREPL();
         }catch(Exception e){
             String mes = e.getMessage();
+            e.printStackTrace();
             if(mes == null){
                 printBodyText("Sorry! An unknown error occured");
             }else if(mes.contains("400")){
