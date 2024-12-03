@@ -1,6 +1,7 @@
 package service;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import dataaccess.DataAccessException;
 import models.results.GameResult;
 import models.results.RegResult;
@@ -96,6 +97,13 @@ public class LoginService extends Service{
         }
         gameDA.updateGame(newGame);
         return newGame;
+    }
+
+    public void makeMove(String authToken, GameData game) throws DataAccessException{
+        if(authDA.getAuth(authToken) == null){
+            throw new DataAccessException("Error: unauthorized");
+        }
+        gameDA.updateGame(game);
     }
 
     public String getName(String authToken){

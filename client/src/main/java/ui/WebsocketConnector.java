@@ -1,12 +1,14 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import exception.ResponseException;
 import models.AuthData;
 import ui.NotificationHandler;
 import messages.Notification;
 import com.google.gson.Gson;
 import websocket.commands.JoinGameCommand;
+import websocket.commands.MakeMoveCommand;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -47,6 +49,12 @@ public class WebsocketConnector extends Endpoint{
     public void joinGamePlayer(String authToken, int gameID, ChessGame.TeamColor color) throws Exception{
         JoinGameCommand cmd = new JoinGameCommand(authToken, gameID, color);
         String mes = gsonS.toJson(cmd, JoinGameCommand.class);
+        this.session.getBasicRemote().sendText(mes);
+    }
+
+    public void makeMove(String authToken, int gameID, ChessMove move) throws Exception{
+        MakeMoveCommand cmd = new MakeMoveCommand(authToken, gameID, move);
+        String mes = gsonS.toJson(cmd, MakeMoveCommand.class);
         this.session.getBasicRemote().sendText(mes);
     }
 

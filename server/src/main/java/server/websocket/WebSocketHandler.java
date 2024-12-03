@@ -1,12 +1,14 @@
 package server.websocket;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import com.google.gson.Gson;
 import models.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import service.LoginService;
 import websocket.commands.JoinGameCommand;
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.Action;
 
@@ -50,6 +52,23 @@ public class WebSocketHandler{
         }
     }
 
+    public void makeMove(Session session, String message){
+        MakeMoveCommand cmd = gsonS.fromJson(message, MakeMoveCommand.class);
+        int gameID = cmd.getGameID();
+        String auth = cmd.getAuthToken();
+        ChessMove move = cmd.getMove();
+
+        try{
+            GameData gameData = gameService.getGame(gameID);
+            ChessGame game = gameData.game();
+            game.makeMove(move);
+            GameData temp = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            gameService.makeMove(auth, temp);
+        } catch(Exception e){
+            System.out.println("Error: Could not join game");
+        }
+    }
+
     private String gameRole(String username, GameData game){
         if(username.equals(game.whiteUsername())){
             return "white.";
@@ -60,3 +79,4 @@ public class WebSocketHandler{
         }
     }
 }
+
