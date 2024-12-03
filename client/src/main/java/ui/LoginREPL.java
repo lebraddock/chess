@@ -1,11 +1,14 @@
 package ui;
 
+import chess.ChessGame;
+import models.GameData;
+
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import static ui.EscapeSequences.*;
 
-public class LoginREPL implements NotificationHandler{
+public class LoginREPL{
     String url;
     ChessClient client;
     public LoginREPL(String url){
@@ -63,6 +66,27 @@ public class LoginREPL implements NotificationHandler{
         }
     }
 
+    public void gameREPL(){
+        Scanner scanner = new Scanner(System.in);
+        String result = "";
+        while(!result.equals("Exiting Game...")){
+            client.printHeader("Enter option: (Press 1 for help)");
+            out.print(RESET_BG_COLOR);
+            out.print(RESET_TEXT_COLOR);
+            out.print("[IN GAME]>>> ");
+            String line = scanner.nextLine();
+            String[] lineS = line.split(" ");
+            if (lineS.length >= 2) {
+                out.println("Error: Too many inputs");
+            } else if (!isValidInt(lineS[0], 4)) {
+                out.println("Error: Not a valid input");
+            } else {
+                result = client.evaluateInput(Integer.parseInt(lineS[0]));
+            }
+        }
+
+    }
+
 
 
 
@@ -80,7 +104,4 @@ public class LoginREPL implements NotificationHandler{
 
     }
 
-    public void notify(messages.Notification notification) {
-        System.out.println(notification.getMessage());
-    }
 }

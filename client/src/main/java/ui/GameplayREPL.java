@@ -1,15 +1,19 @@
 package ui;
 
 import chess.ChessGame;
+import com.google.gson.Gson;
+import websocket.messages.LoadGameMessage;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import static ui.EscapeSequences.*;
 
 public class GameplayREPL implements NotificationHandler{
     GameClient client;
+    Gson gsonS = new Gson();
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
 
     public GameplayREPL(String url, String authToken, int gameID, ChessGame.TeamColor color)throws Exception{
@@ -51,7 +55,20 @@ public class GameplayREPL implements NotificationHandler{
 
     }
 
-    public void notify(messages.Notification notification) {
+    public void notify(String message) {
+        messages.Notification notification = gsonS.fromJson(message, messages.Notification.class);
         System.out.println(notification.getMessage());
     }
+
+    public void loadGame(String message){
+        try {
+            ChessGame game = gsonS.fromJson(message, LoadGameMessage.class).getGame();
+            System.out.println("test     test");
+            TimeUnit.SECONDS.sleep(2);
+            client.updateGame(game);
+        }catch(Exception e){
+            System.out.println("Could not update game");
+        }
+    }
+
 }

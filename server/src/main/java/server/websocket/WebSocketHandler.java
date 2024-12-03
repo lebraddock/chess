@@ -2,6 +2,7 @@ package server.websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPiece;
 import com.google.gson.Gson;
 import models.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
@@ -27,6 +28,7 @@ public class WebSocketHandler{
         UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
         switch (action.getCommandType()) {
             case JOIN_GAME -> joinGame(session, message);
+            case MAKE_MOVE -> makeMove(session, message);
         }
     }
 
@@ -40,11 +42,11 @@ public class WebSocketHandler{
             GameData game = gameService.getGame(gameID);
             String userN = gameService.getName(auth);
             ServerMessage load = new LoadGameMessage(game.game());
-            String mesJson = gsonS.toJson(load, ServerMessage.class);
+            String mesJson = gsonS.toJson(load, LoadGameMessage.class);
             connections.sendMessage(session, mesJson);
 
             String mes = String.format("%s is now %s.", userN, gameRole(userN, game));
-            ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes);
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(game.gameID(), session, note);
         }catch(Exception e){
@@ -63,7 +65,20 @@ public class WebSocketHandler{
             ChessGame game = gameData.game();
             game.makeMove(move);
             GameData temp = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
+            ChessPiece piece = temp.game().getBoard().getPiece(move.getStartPosition());
+            String p;
             gameService.makeMove(auth, temp);
+            String userN = gameService.getName(auth);
+
+
+            String mes = String.format("%s made a move!", userN);
+            ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION,mes);
+            String note = gsonS.toJson(notification, messages.Notification.class);
+            connections.broadcast(gameID, session, note);
+
+            ServerMessage load = new LoadGameMessage(game);
+            String mesJson = gsonS.toJson(load, LoadGameMessage.class);
+            connections.broadcast(gameID,session, mesJson);
         } catch(Exception e){
             System.out.println("Error: Could not join game");
         }

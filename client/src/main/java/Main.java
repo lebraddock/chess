@@ -11,12 +11,9 @@ public class Main {
         if (args.length == 1) {
             serverUrl = args[0];
         }
-        Server server = new Server();
-        var port = server.run(8080);
-        System.out.println("Started test HTTP server on " + port);
+
 
         new LoginREPL(serverUrl).loginMenuREPL();
 
-        server.stop();
     }
 }

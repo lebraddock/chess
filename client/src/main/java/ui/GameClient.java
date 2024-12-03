@@ -78,6 +78,7 @@ public class GameClient{
             ChessPosition startPos = notationToNum(start);
             ChessPosition endPos = notationToNum(end);
             ChessMove move = new ChessMove(startPos, endPos, null);
+            game.makeMove(move);
             ws.makeMove(authToken, gameID, move);
         }catch (Exception e){
             printBodyText("Sorry! Invalid move");
@@ -246,7 +247,11 @@ public class GameClient{
         return r;
     }
 
-    private static void resetBG(PrintStream out) throws Exception{
+    public void updateGame(ChessGame newGame){
+        game = newGame;
+    }
+
+    private static void resetBG(PrintStream out){
         out.print(RESET_BG_COLOR);
     }
 

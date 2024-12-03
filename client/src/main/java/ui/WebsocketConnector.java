@@ -9,6 +9,7 @@ import messages.Notification;
 import com.google.gson.Gson;
 import websocket.commands.JoinGameCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
@@ -33,8 +34,11 @@ public class WebsocketConnector extends Endpoint{
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                    Notification notification = gsonS.fromJson(message, Notification.class);
-                    notificationHandler.notify(notification);
+                    ServerMessage serverMessage = gsonS.fromJson(message, ServerMessage.class);
+                    switch(serverMessage.getServerMessageType()){
+                        case LOAD_GAME -> notificationHandler.loadGame(message);
+                        case NOTIFICATION -> notificationHandler.notify(message);
+                    }
                 }
             });
         } catch (DeploymentException | IOException | URISyntaxException ex) {
