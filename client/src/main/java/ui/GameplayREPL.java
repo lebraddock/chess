@@ -6,11 +6,13 @@ import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class GameplayREPL{
+public class GameplayREPL implements NotificationHandler{
     GameClient client;
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-    public GameplayREPL(){
-        this.client = new GameClient();
+
+    public GameplayREPL(String url)throws Exception{
+        WebsocketConnector ws = new WebsocketConnector(url, this);
+        this.client = new GameClient(ws);
     }
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);
@@ -44,5 +46,9 @@ public class GameplayREPL{
         }
         return false;
 
+    }
+
+    public void notify(messages.Notification notification) {
+        System.out.println(notification.getMessage());
     }
 }

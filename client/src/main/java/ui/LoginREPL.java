@@ -3,10 +3,9 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-
 import static ui.EscapeSequences.*;
 
-public class LoginREPL{
+public class LoginREPL implements NotificationHandler{
     String url;
     ChessClient client;
     public LoginREPL(String url){
@@ -79,5 +78,9 @@ public class LoginREPL{
         }
         return false;
 
+    }
+
+    public void notify(messages.Notification notification) {
+        System.out.println(notification.getMessage());
     }
 }
