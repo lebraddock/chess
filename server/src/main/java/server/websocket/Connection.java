@@ -21,4 +21,8 @@ public class Connection {
     public String getAuthToken(){
         return authToken;
     }
+
+    public Session getSession(){
+        return session;
+    }
 }

@@ -20,8 +20,12 @@ import java.io.IOException;
 @WebSocket
 public class WebSocketHandler{
     protected static Gson gsonS = new Gson();
-    private final ConnectionManager connections = new ConnectionManager();
-    private final LoginService gameService = new LoginService();
+    private final ConnectionManager connections;
+    private final LoginService gameService;
+    public WebSocketHandler(){
+        this.connections = new ConnectionManager();
+        this.gameService = new LoginService();
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
@@ -33,18 +37,28 @@ public class WebSocketHandler{
     }
 
     public void joinGame(Session session, String message) {
-        JoinGameCommand action = gsonS.fromJson(message, JoinGameCommand.class);
-        int gameID = action.getGameID();
-        String auth = action.getAuthToken();
-        connections.add(gameID, auth, session);
-
         try {
+            JoinGameCommand action = gsonS.fromJson(message, JoinGameCommand.class);
+            int gameID = action.getGameID();
+            String auth = action.getAuthToken();
+            /*ChessGame.TeamColor colorV = action.getColor();
+            String color;
+            if(colorV == ChessGame.TeamColor.WHITE){
+                color = "WHITE";
+            }else{
+                color = "BLACK";
+            }*/
+            //gameService.updateGame(auth, color, gameID);
+            connections.add(gameID, auth, session);
+
+            //send message to user
             GameData game = gameService.getGame(gameID);
             String userN = gameService.getName(auth);
             ServerMessage load = new LoadGameMessage(game.game());
             String mesJson = gsonS.toJson(load, LoadGameMessage.class);
             connections.sendMessage(session, mesJson);
 
+            //send message to everyone
             String mes = String.format("%s is now %s.", userN, gameRole(userN, game));
             ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes);
             String note = gsonS.toJson(notification, messages.Notification.class);
@@ -80,6 +94,7 @@ public class WebSocketHandler{
             String mesJson = gsonS.toJson(load, LoadGameMessage.class);
             connections.broadcast(gameID,session, mesJson);
         } catch(Exception e){
+            e.printStackTrace();
             System.out.println("Error: Could not join game");
         }
     }

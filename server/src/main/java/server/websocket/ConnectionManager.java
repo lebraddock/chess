@@ -41,7 +41,7 @@ public class ConnectionManager {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.get(gameID)) {
             if (c.session.isOpen()) {
-                if (c != excludeUser) {
+                if (c.getSession() != excludeUser) {
                     c.send(notification);
                 }
             } else {
@@ -50,10 +50,13 @@ public class ConnectionManager {
         }
 
         // Clean up any connections that were left open.
-        for (var c : removeList) {
+        /*for (var c : removeList) {
             ArrayList<Connection> temp = connections.get(gameID);
             temp.remove(c);
             connections.put(gameID, temp);
+        }*/
+        for (var c : removeList) {
+            connections.get(gameID).remove(c);
         }
     }
 

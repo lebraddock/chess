@@ -41,6 +41,32 @@ public class GameClient{
         printBodyText("6: Leave");
     }
 
+    public void printViewGameMenu() {
+        printHeader("Options:");
+        printBodyText("1: Help");
+        printBodyText("2: Redraw Board");
+        printBodyText("3: Show Legal Moves");
+        printBodyText("4: Leave");
+    }
+
+    public String evaluateViewInput(int value){
+        if(!(value >= 1 && value <= 4)){
+            return "";
+        }
+        if(value == 1){
+            printViewGameMenu();
+        }else if(value == 2){
+            printBoard();
+        }else if(value == 3){
+
+        }else if(value == 4){
+            return "Exiting Game...";
+        }else{
+            printBodyText("Incorrect Input");
+        }
+        return "";
+    }
+
     public String evaluateInput(int value){
         if(!(value >= 1 && value <= 6)){
             return "";
@@ -56,7 +82,7 @@ public class GameClient{
         }else if(value == 5){
 
         }else if(value == 6){
-            return "Finished";
+            return "Exiting Game...";
         }else{
             printBodyText("Incorrect Input");
         }

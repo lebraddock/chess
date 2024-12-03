@@ -106,10 +106,10 @@ public class ChessClient{
             String gameIDString = scanner.nextLine();
             gameID = Integer.parseInt(gameIDString);
             gameID = getIDFromNum(gameID);
-
+            GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, ChessGame.TeamColor.WHITE);
+            inGameREPL.viewREPL();
         }catch (Exception e){
             printBodyText("Sorry! Incorrect input");
-            return;
         }
 
     }
