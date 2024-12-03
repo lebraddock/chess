@@ -24,7 +24,7 @@ public class GameplayREPL implements NotificationHandler{
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
-            out.print("[LOGGED IN]>>> ");
+            out.print("[IN GAME]>>> ");
             String line = scanner.nextLine();
             String[] lineS = line.split(" ");
             if (lineS.length >= 2) {

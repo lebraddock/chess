@@ -1,5 +1,6 @@
 package server.websocket;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import models.GameData;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;

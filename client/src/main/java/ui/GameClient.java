@@ -7,6 +7,7 @@ import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 import static ui.EscapeSequences.RESET_TEXT_COLOR;
@@ -16,10 +17,12 @@ public class GameClient{
     private WebsocketConnector ws;
     private ChessGame.TeamColor color;
     private ChessGame game;
+    Scanner scanner = new Scanner(System.in);
 
     public GameClient(WebsocketConnector ws, ChessGame.TeamColor color){
         this.ws = ws;
         this.color = color;
+        game = new ChessGame();
     }
 
     public ChessGame.TeamColor getColor(){
@@ -45,7 +48,7 @@ public class GameClient{
         }else if(value == 2){
             printBoard();
         }else if(value == 3){
-
+            makeMove();
         }else if(value == 4){
 
         }else if(value == 5){
@@ -56,6 +59,15 @@ public class GameClient{
             printBodyText("Incorrect Input");
         }
         return "";
+    }
+
+    public void makeMove(){
+        printHeader("Enter option: (Press 1 for help)");
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print("[IN GAME]>>> ");
+        String line = scanner.nextLine();
+        
     }
 
     public void printBoard() {
