@@ -74,6 +74,10 @@ public class ChessGame {
         return valid;
     }
 
+    public Collection<ChessMove> getValidMoves(ChessPosition pos){
+        return validMoves(pos);
+    }
+
     /**
      * Makes a move in a chess game
      *

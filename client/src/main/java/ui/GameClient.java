@@ -4,6 +4,8 @@ import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -18,6 +20,9 @@ public class GameClient{
     Scanner scanner = new Scanner(System.in);
     String authToken;
     int gameID;
+    Collection<ChessPosition> highLightPositions = new ArrayList<>();
+    ArrayList<ChessPosition> prevMove = new ArrayList<>();
+    Boolean gameFinished = false;
 
     public GameClient(WebsocketConnector ws, ChessGame.TeamColor color, String authToken, int gameID){
         this.ws = ws;
@@ -58,7 +63,7 @@ public class GameClient{
         }else if(value == 2){
             printBoard();
         }else if(value == 3){
-
+            showLegalMoves();
         }else if(value == 4){
             return "Exiting Game...";
         }else{
@@ -78,7 +83,7 @@ public class GameClient{
         }else if(value == 3){
             makeMove();
         }else if(value == 4){
-
+            showLegalMoves();
         }else if(value == 5){
 
         }else if(value == 6){
@@ -89,7 +94,32 @@ public class GameClient{
         return "";
     }
 
+    public void showLegalMoves(){
+        if(gameFinished){
+            printBodyText("The game has ended");
+            return;
+        }
+        printHeader("Enter piece to move:");
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print("[IN GAME]>>> ");
+        String start = scanner.nextLine();
+        try {
+            ChessPosition pos = notationToNum(start);
+            setHighLightPositions(pos);
+            printBoard();
+            resetHighlight();
+        }catch(Exception e){
+            printBodyText("Sorry! Please select a piece in standard chess notation");
+        }
+    }
+
+
     public void makeMove(){
+        if(gameFinished){
+            printBodyText("The game has ended");
+            return;
+        }
         printHeader("Enter move start position:");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
@@ -154,6 +184,7 @@ public class GameClient{
         out.print(" " + rowNum + " ");
         for(int i = 1; i <= 8; i++){
             white = setColor(white);
+            setHighlight(rowNum, i, white);
             printPiece(board, rowNum, i);
         }
         resetBG(out);
@@ -171,6 +202,7 @@ public class GameClient{
         out.print(" " + rowNum + " ");
         for(int i = 8; i >= 1; i--){
             white = setColor(white);
+            setHighlight(rowNum,i,white);
             printPiece(board, rowNum, i);
         }
         resetBG(out);
@@ -201,6 +233,28 @@ public class GameClient{
         out.println("   " + str);
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
+    }
+
+    private void setHighlight(int y, int x, boolean isWhite){
+        boolean moveHighlight = false;
+        boolean lastHighlight = false;
+        ChessPosition pos = new ChessPosition(y,x);
+        if(highLightPositions.contains(pos)){
+            moveHighlight = true;
+        }
+        if(prevMove.contains(pos)){
+            lastHighlight = true;
+        }
+        if(moveHighlight){
+            if(isWhite){
+                out.print(SET_BG_COLOR_BLUE);
+            }else{
+                out.print(SET_BG_COLOR_LIGHT_BLUE);
+            }
+        }
+        if(lastHighlight){
+            out.print(SET_BG_COLOR_YELLOW);
+        }
     }
 
     private void setBGLight(){
@@ -289,5 +343,23 @@ public class GameClient{
         int x = notation.charAt(0) - 'a' + 1;
         int y = notation.charAt(1) - 48;
         return new ChessPosition(y,x);
+    }
+
+    private void setPrevMove(ChessMove move){
+        prevMove = new ArrayList<>();
+        prevMove.add(move.getStartPosition());
+        prevMove.add(move.getEndPosition());
+    }
+
+    private void setHighLightPositions(ChessPosition pos){
+        resetHighlight();
+        Collection<ChessMove> highLightPositionsT = game.getValidMoves(pos);
+        for(ChessMove c : highLightPositionsT){
+            highLightPositions.add(c.getEndPosition());
+        }
+    }
+
+    private void resetHighlight(){
+        highLightPositions = new ArrayList<ChessPosition>();
     }
 }

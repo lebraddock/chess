@@ -88,15 +88,19 @@ public class GameplayREPL implements NotificationHandler{
 
     public void sendNotify(String message) {
         messages.Notification notification = gsonS.fromJson(message, messages.Notification.class);
+        System.out.println("");
         System.out.println(notification.getMessage());
+        System.out.print("[In GAME]>>> ");
     }
 
     public void loadGame(String message){
         try {
             ChessGame game = gsonS.fromJson(message, LoadGameMessage.class).getGame();
-            System.out.println("test     test");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
             client.updateGame(game);
+            System.out.println("");
+            client.printBoard();
+            System.out.print("[IN GAME]>>> ");
         }catch(Exception e){
             System.out.println("Could not update game");
         }

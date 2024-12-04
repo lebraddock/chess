@@ -29,9 +29,11 @@ public class WebSocketHandler{
 
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException {
+
         UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
+        System.out.println(action.getCommandType().toString());
         switch (action.getCommandType()) {
-            case JOIN_GAME -> joinGame(session, message);
+            case CONNECT -> joinGame(session, message);
             case MAKE_MOVE -> makeMove(session, message);
         }
     }
@@ -64,6 +66,7 @@ public class WebSocketHandler{
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(game.gameID(), session, note);
         }catch(Exception e){
+            e.printStackTrace();
             System.out.println("Error: Could not join game");
         }
     }
@@ -94,8 +97,7 @@ public class WebSocketHandler{
             String mesJson = gsonS.toJson(load, LoadGameMessage.class);
             connections.broadcast(gameID,session, mesJson);
         } catch(Exception e){
-            e.printStackTrace();
-            System.out.println("Error: Could not join game");
+            System.out.println("Error: Could not Make move");
         }
     }
 
