@@ -69,6 +69,16 @@ public class WebsocketConnector extends Endpoint{
         }
     }
 
+    public void endGame(String authToken, int gameID){
+        try{
+            UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.RESIGN, authToken, gameID);
+            String mes = gsonS.toJson(cmd, UserGameCommand.class);
+            this.session.getBasicRemote().sendText(mes);
+        }catch (Exception e){
+            System.out.println("resign");
+        }
+    }
+
 
     //public void send(String msg) throws Exception {this.session.getBasicRemote().sendText(msg);}
     //public void onOpen(Session session, EndpointConfig endpointConfig) {}

@@ -94,6 +94,21 @@ public class GameClient{
         return "";
     }
 
+    public void resign(){
+        int result = 0;
+        if(color == ChessGame.TeamColor.WHITE){
+            result = 1;
+        }else{
+            result = 2;
+        }
+        gameFinished = true;
+
+    }
+
+    public void setGameFinished(boolean b){
+        gameFinished = b;
+    }
+
     public void showLegalMoves(){
         if(gameFinished){
             printBodyText("The game has ended");
@@ -148,6 +163,13 @@ public class GameClient{
             printBoardWhite(game.getBoard());
         }else{
             printBoardBlack(game.getBoard());
+        }
+        if(gameFinished){
+            if(game.getResult() == 1){
+                printHeader("White has won the game");
+            }else{
+                printHeader("Black has won the game");
+            }
         }
     }
 

@@ -36,6 +36,7 @@ public class WebSocketHandler{
             case CONNECT -> joinGame(session, message);
             case MAKE_MOVE -> makeMove(session, message);
             case LEAVE -> leaveSession(session, message);
+            case RESIGN -> resignGame(session, message);
         }
     }
 
@@ -45,12 +46,15 @@ public class WebSocketHandler{
             int gameID = action.getGameID();
             String auth = action.getAuthToken();
             String userName = gameService.getName(auth);
+            String mes = String.format("%s has left.", userName);
+            ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes);
+            String note = gsonS.toJson(notification, messages.Notification.class);
+            connections.broadcast(gameID, session, note);
 
             connections.remove(gameID, auth);
             removeFromGame(gameID, auth);
 
-            String mes = String.format("%s has left.", userName);
-            connections.broadcast(gameID, session, mes);
+
 
         }catch(Exception e){
             System.out.println("Could not leave session");
@@ -77,7 +81,6 @@ public class WebSocketHandler{
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(game.gameID(), session, note);
         }catch(Exception e){
-            e.printStackTrace();
             System.out.println("Error: Could not join game");
         }
     }
@@ -109,6 +112,42 @@ public class WebSocketHandler{
             connections.broadcast(gameID,session, mesJson);
         } catch(Exception e){
             System.out.println("Error: Could not Make move");
+        }
+    }
+
+    public void resignGame(Session session, String message){
+        try {
+            UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
+            int gameID = action.getGameID();
+            String auth = action.getAuthToken();
+            String userName = gameService.getName(auth);
+
+            resign(gameID, auth);
+            String mes = String.format("%s has resigned.", userName);
+            ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes);
+            String note = gsonS.toJson(notification, messages.Notification.class);
+            connections.broadcast(gameID, session, note);
+
+            ChessGame game = gameService.getGame(gameID).game();
+
+            ServerMessage load = new LoadGameMessage(game);
+            String mesJson = gsonS.toJson(load, LoadGameMessage.class);
+            connections.broadcast(gameID,session, mesJson);
+
+
+
+
+
+        }catch(Exception e){
+            System.out.println("Could not leave session");
+        }
+    }
+
+    public void resign(int gameID, String auth){
+        try{
+            gameService.resign(auth, gameID);
+        }catch(Exception e){
+            System.out.println("Could not resign");
         }
     }
 

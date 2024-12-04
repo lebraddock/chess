@@ -99,6 +99,21 @@ public class LoginService extends Service{
         return newGame;
     }
 
+    public void resign(String authToken, int gameID) throws DataAccessException{
+        GameData temp = getGame(gameID);
+        String name = getName(authToken);
+        String bUsername = temp.blackUsername();
+        String wUsername = temp.whiteUsername();
+        int newRes = 0;
+        if (name.equals(bUsername)) {
+            newRes = 2;
+        } else if(name.equals(wUsername)) {
+            newRes = 1;
+        }
+        temp.game().setResult(newRes);
+        gameDA.updateGame(temp);
+    }
+
     public void leaveGame(String authToken, int gameID) throws DataAccessException{
         GameData temp = getGame(gameID);
         String name = getName(authToken);
@@ -108,7 +123,7 @@ public class LoginService extends Service{
         if(temp.game().getResult() == 0) {
             if (name.equals(bUsername)) {
                 bUsername = null;
-            } else {
+            } else if(name.equals(wUsername)) {
                 wUsername = null;
             }
             GameData newGame = new GameData(gameID, wUsername, bUsername, temp.gameName(), temp.game());
