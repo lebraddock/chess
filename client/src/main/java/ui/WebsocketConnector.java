@@ -9,6 +9,7 @@ import messages.Notification;
 import com.google.gson.Gson;
 import websocket.commands.JoinGameCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
@@ -56,6 +57,12 @@ public class WebsocketConnector extends Endpoint{
         MakeMoveCommand cmd = new MakeMoveCommand(authToken, gameID, move);
         String mes = gsonS.toJson(cmd, MakeMoveCommand.class);
         this.session.getBasicRemote().sendText(mes);
+    }
+
+    public void closeSession(String authToken, int gameID){
+        UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+        String mes = gsonS.toJson(cmd, UserGameCommand.class);
+
     }
 
 

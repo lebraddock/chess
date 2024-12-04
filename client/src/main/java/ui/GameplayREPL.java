@@ -42,6 +42,7 @@ public class GameplayREPL implements NotificationHandler{
                 result = client.evaluateInput(Integer.parseInt(lineS[0]));
             }
         }
+        ws.closeSession(client.getAuth(), client.getGameID());
     }
 
     public void viewREPL(){

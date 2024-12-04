@@ -362,4 +362,12 @@ public class GameClient{
     private void resetHighlight(){
         highLightPositions = new ArrayList<ChessPosition>();
     }
+
+    public String getAuth(){
+        return authToken;
+    }
+
+    public int getGameID(){
+        return gameID;
+    }
 }
