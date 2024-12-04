@@ -226,15 +226,13 @@ public class ChessClient{
             printBodyText("Sorry! Incorrect input");
             return;
         }
-        JoinGameRequest req = new JoinGameRequest(colorS, gameID);
+        //JoinGameRequest req = new JoinGameRequest(colorS, gameID);
         try {
-            server.joinGame(req, authToken);
             printHeader("Successfully joined game!");
             GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, tColor);
             inGameREPL.gameREPL();
         }catch(Exception e){
             String mes = e.getMessage();
-            e.printStackTrace();
             if(mes == null){
                 printBodyText("Sorry! An unknown error occured");
             }else if(mes.contains("400")){

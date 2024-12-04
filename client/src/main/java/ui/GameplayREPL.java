@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessGame;
 import com.google.gson.Gson;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.ServerMessage;
 
@@ -18,16 +19,24 @@ public class GameplayREPL implements NotificationHandler{
     Gson gsonS = new Gson();
     PrintStream out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     WebsocketConnector ws;
+    boolean leave = false;
 
     public GameplayREPL(String url, String authToken, int gameID, ChessGame.TeamColor color)throws Exception{
         ws = new WebsocketConnector(url, this);
-        ws.joinGamePlayer(authToken, gameID, color);
-        this.client = new GameClient(ws, color, authToken, gameID);
+        if(color == null){
+            ws.joinGameObserver(authToken, gameID);
+            this.client = new GameClient(ws, color, authToken, gameID);
+        }else {
+            ws.joinGameObserver(authToken, gameID);
+            TimeUnit.MILLISECONDS.sleep(250);
+            ws.joinGamePlayer(authToken, gameID, color);
+            this.client = new GameClient(ws, color, authToken, gameID);
+        }
     }
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while(!result.equals("Exiting Game...")){
+        while(!result.equals("Exiting Game...") || leave){
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
@@ -48,7 +57,7 @@ public class GameplayREPL implements NotificationHandler{
     public void viewREPL(){
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while(!result.equals("Exiting Game...")){
+        while(!result.equals("Exiting Game...") || leave){
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
@@ -84,7 +93,14 @@ public class GameplayREPL implements NotificationHandler{
         switch(serverMessage.getServerMessageType()){
             case LOAD_GAME -> loadGame(message);
             case NOTIFICATION -> sendNotify(message);
+            case ERROR -> preventEnter(message);
         }
+    }
+
+    public void preventEnter(String message){
+        ErrorMessage notification = gsonS.fromJson(message, ErrorMessage.class);
+        System.out.print(notification.getMessage());
+        leave = true;
     }
 
     public void sendNotify(String message) {

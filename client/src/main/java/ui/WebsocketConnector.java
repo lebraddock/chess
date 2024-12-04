@@ -47,7 +47,14 @@ public class WebsocketConnector extends Endpoint{
     public void onOpen(Session session, EndpointConfig config) {
     }
 
+    public void joinGameObserver(String authToken, int gameID) throws Exception{
+        UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.CONNECT, authToken, gameID);
+        String mes = gsonS.toJson(cmd, UserGameCommand.class);
+        this.session.getBasicRemote().sendText(mes);
+    }
+
     public void joinGamePlayer(String authToken, int gameID, ChessGame.TeamColor color) throws Exception{
+
         JoinGameCommand cmd = new JoinGameCommand(authToken, gameID, color);
         String mes = gsonS.toJson(cmd, JoinGameCommand.class);
         this.session.getBasicRemote().sendText(mes);

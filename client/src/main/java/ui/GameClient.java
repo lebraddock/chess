@@ -165,11 +165,26 @@ public class GameClient{
         }else{
             printBoardBlack(game.getBoard());
         }
+        ChessGame.TeamColor turn = game.getTeamTurn();
         if(gameFinished){
+            if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                printBodyText("White has been checkmated");
+            }else if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+                printBodyText("Black had been checkmated");
+            }
             if(game.getResult() == 1){
                 printHeader("White has won the game");
             }else{
                 printHeader("Black has won the game");
+            }
+            return;
+        }
+
+        if(game.isInCheck(turn)){
+            if(turn == ChessGame.TeamColor.WHITE){
+                printBodyText("White is in check!");
+            }else{
+                printBodyText("Black is in check!");
             }
         }
     }

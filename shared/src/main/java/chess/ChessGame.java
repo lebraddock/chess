@@ -121,6 +121,13 @@ public class ChessGame {
         } else {
             this.teamTurn = TeamColor.WHITE;
         }
+        if(isInCheckmate(this.teamTurn)){
+            if(this.teamTurn == TeamColor.WHITE){
+                isFinished = 2;
+            }else{
+                isFinished = 1;
+            }
+        }
 
     }
 
