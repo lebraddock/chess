@@ -22,7 +22,7 @@ public class GameClient{
     int gameID;
     Collection<ChessPosition> highLightPositions = new ArrayList<>();
     ArrayList<ChessPosition> prevMove = new ArrayList<>();
-    Boolean gameFinished = false;
+    Boolean gameFinished;
 
     public GameClient(WebsocketConnector ws, ChessGame.TeamColor color, String authToken, int gameID){
         this.ws = ws;
@@ -30,6 +30,7 @@ public class GameClient{
         this.authToken = authToken;
         this.gameID = gameID;
         game = new ChessGame();
+        gameFinished = false;
     }
 
     public ChessGame.TeamColor getColor(){
@@ -85,7 +86,7 @@ public class GameClient{
         }else if(value == 4){
             showLegalMoves();
         }else if(value == 5){
-
+            resign();
         }else if(value == 6){
             return "Exiting Game...";
         }else{
@@ -102,7 +103,7 @@ public class GameClient{
             result = 2;
         }
         gameFinished = true;
-
+        ws.endGame(authToken, gameID);
     }
 
     public void setGameFinished(boolean b){

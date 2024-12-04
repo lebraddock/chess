@@ -134,10 +134,6 @@ public class WebSocketHandler{
             String mesJson = gsonS.toJson(load, LoadGameMessage.class);
             connections.broadcast(gameID,session, mesJson);
 
-
-
-
-
         }catch(Exception e){
             System.out.println("Could not leave session");
         }

@@ -75,7 +75,7 @@ public class WebsocketConnector extends Endpoint{
             String mes = gsonS.toJson(cmd, UserGameCommand.class);
             this.session.getBasicRemote().sendText(mes);
         }catch (Exception e){
-            System.out.println("resign");
+            System.out.println("Could not resign");
         }
     }
 

@@ -106,9 +106,9 @@ public class LoginService extends Service{
         String wUsername = temp.whiteUsername();
         int newRes = 0;
         if (name.equals(bUsername)) {
-            newRes = 2;
-        } else if(name.equals(wUsername)) {
             newRes = 1;
+        } else if(name.equals(wUsername)) {
+            newRes = 2;
         }
         temp.game().setResult(newRes);
         gameDA.updateGame(temp);

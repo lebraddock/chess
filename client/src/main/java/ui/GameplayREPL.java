@@ -98,8 +98,10 @@ public class GameplayREPL implements NotificationHandler{
         try {
             ChessGame game = gsonS.fromJson(message, LoadGameMessage.class).getGame();
             TimeUnit.SECONDS.sleep(1);
+            if(game.getResult() != 0) {
+                client.setGameFinished(true);
+            }
             client.updateGame(game);
-            client.setGameFinished(true);
             System.out.println("");
             client.printBoard();
             System.out.print("[IN GAME]>>> ");
