@@ -36,7 +36,7 @@ public class GameplayREPL implements NotificationHandler{
             String[] lineS = line.split(" ");
             if (lineS.length >= 2) {
                 out.println("Error: Too many inputs");
-            } else if (!isValidInt(lineS[0], 4)) {
+            } else if (!isValidInt(lineS[0], 6)) {
                 out.println("Error: Not a valid input");
             } else {
                 result = client.evaluateInput(Integer.parseInt(lineS[0]));

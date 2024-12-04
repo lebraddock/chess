@@ -35,6 +35,25 @@ public class WebSocketHandler{
         switch (action.getCommandType()) {
             case CONNECT -> joinGame(session, message);
             case MAKE_MOVE -> makeMove(session, message);
+            case LEAVE -> leaveSession(session, message);
+        }
+    }
+
+    public void leaveSession(Session session, String message){
+        try {
+            UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
+            int gameID = action.getGameID();
+            String auth = action.getAuthToken();
+            String userName = gameService.getName(auth);
+
+            connections.remove(gameID, auth);
+            removeFromGame(gameID, auth);
+
+            String mes = String.format("%s has left.", userName);
+            connections.broadcast(gameID, session, mes);
+
+        }catch(Exception e){
+            System.out.println("Could not leave session");
         }
     }
 
@@ -43,14 +62,6 @@ public class WebSocketHandler{
             JoinGameCommand action = gsonS.fromJson(message, JoinGameCommand.class);
             int gameID = action.getGameID();
             String auth = action.getAuthToken();
-            /*ChessGame.TeamColor colorV = action.getColor();
-            String color;
-            if(colorV == ChessGame.TeamColor.WHITE){
-                color = "WHITE";
-            }else{
-                color = "BLACK";
-            }*/
-            //gameService.updateGame(auth, color, gameID);
             connections.add(gameID, auth, session);
 
             //send message to user
@@ -98,6 +109,14 @@ public class WebSocketHandler{
             connections.broadcast(gameID,session, mesJson);
         } catch(Exception e){
             System.out.println("Error: Could not Make move");
+        }
+    }
+
+    public void removeFromGame(int gameID, String auth){
+        try {
+            gameService.leaveGame(auth, gameID);
+        }catch(Exception e){
+            System.out.println("Could not leave game");
         }
     }
 

@@ -99,6 +99,23 @@ public class LoginService extends Service{
         return newGame;
     }
 
+    public void leaveGame(String authToken, int gameID) throws DataAccessException{
+        GameData temp = getGame(gameID);
+        String name = getName(authToken);
+        String bUsername = temp.blackUsername();
+        String wUsername = temp.whiteUsername();
+        //if game is finished, leave player in the game
+        if(temp.game().getResult() == 0) {
+            if (name.equals(bUsername)) {
+                bUsername = null;
+            } else {
+                wUsername = null;
+            }
+            GameData newGame = new GameData(gameID, wUsername, bUsername, temp.gameName(), temp.game());
+            gameDA.updateGame(newGame);
+        }
+    }
+
     public void makeMove(String authToken, GameData game) throws DataAccessException{
         if(authDA.getAuth(authToken) == null){
             throw new DataAccessException("Error: unauthorized");

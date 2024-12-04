@@ -37,6 +37,7 @@ public class ConnectionManager {
         temp.removeIf(conn -> Objects.equals(conn.authToken, authToken));
     }
 
+
     public void broadcast(int gameID, Session excludeUser, String notification) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.get(gameID)) {

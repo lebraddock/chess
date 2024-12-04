@@ -60,9 +60,13 @@ public class WebsocketConnector extends Endpoint{
     }
 
     public void closeSession(String authToken, int gameID){
-        UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
-        String mes = gsonS.toJson(cmd, UserGameCommand.class);
-
+        try {
+            UserGameCommand cmd = new UserGameCommand(UserGameCommand.CommandType.LEAVE, authToken, gameID);
+            String mes = gsonS.toJson(cmd, UserGameCommand.class);
+            this.session.getBasicRemote().sendText(mes);
+        }catch (Exception e){
+            System.out.println("Could not leave session");
+        }
     }
 
 
