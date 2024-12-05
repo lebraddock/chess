@@ -4,6 +4,7 @@ import chess.ChessBoard;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
+import models.GameData;
 import models.requests.CreateGameRequest;
 import models.requests.JoinGameRequest;
 import models.results.GameResult;
@@ -180,13 +181,13 @@ public class ChessClient{
         PrintFunctions.printHeader(".................................");
     }
 
-    private int getIDFromNum(int num){
+    private int getIDFromNum(int num) throws Exception{
         try {
             List<GameResult> chessGames = server.listGames(authToken).get("games");
             num = num - 1;
             return chessGames.get(num).gameID();
         } catch (Exception e) {
-            return 0;
+            throw new Exception();
         }
     }
 
@@ -222,19 +223,25 @@ public class ChessClient{
             }else{
                 throw new Exception();
             }
-        }catch (Exception e){
-            PrintFunctions.printBodyText("Sorry! Incorrect input");
-            return;
-        }
-        //JoinGameRequest req = new JoinGameRequest(colorS, gameID);
-        try {
-            PrintFunctions.printHeader("Successfully joined game!");
+            //JoinGameRequest req = new JoinGameRequest(colorS, gameID);
+
+            List<GameResult> games = server.listGames(authToken).get("games");
+            for(GameResult game :games){
+                if(game.gameID() == gameID){
+                    if(game.blackUsername() != null && colorID == 2){
+                        throw new Exception("403");
+                    }
+                    if(game.whiteUsername() != null && colorID == 1){
+                        throw new Exception("403");
+                    }
+                }
+            }
             GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, tColor);
             inGameREPL.gameREPL();
         }catch(Exception e){
             String mes = e.getMessage();
             if(mes == null){
-                PrintFunctions.printBodyText("Sorry! An unknown error occured");
+                PrintFunctions.printBodyText("Sorry! Input is incorrect");
             }else if(mes.contains("400")){
                 PrintFunctions.printBodyText("Sorry! Game does not exist.");
             }else if(mes.contains("403")){

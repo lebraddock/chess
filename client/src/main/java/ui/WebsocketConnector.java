@@ -87,7 +87,4 @@ public class WebsocketConnector extends Endpoint{
     }
 
 
-    //public void send(String msg) throws Exception {this.session.getBasicRemote().sendText(msg);}
-    //public void onOpen(Session session, EndpointConfig endpointConfig) {}
-
 }

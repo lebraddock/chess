@@ -71,15 +71,18 @@ public class WebSocketHandler{
             String auth = action.getAuthToken();
             ChessGame.TeamColor color = action.getColor();
             String c;
+
             if (color == ChessGame.TeamColor.WHITE) {
                 c = "WHITE";
             } else {
                 c = "BLACK";
             }
-            System.out.println(action.toString());
             gameService.updateGame(auth, c, gameID);
         }catch(Exception e){
-            System.out.println("Could not join game");
+            String mes = "Sorry, could not join game as player. Now joining as observer";
+            ErrorMessage notification = new ErrorMessage(mes);
+            String note = gsonS.toJson(notification, ErrorMessage.class);
+            connections.sendMessage(session, note);
         }
     }
 
@@ -114,7 +117,7 @@ public class WebSocketHandler{
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(game.gameID(), session, note);
         }catch(Exception e){
-            e.printStackTrace();
+            System.out.println("Could not connect player");
         }
     }
 
@@ -213,7 +216,7 @@ public class WebSocketHandler{
             resign(gameID, auth);
 
             String mes1 = String.format("You have resigned");
-            ServerMessage notification1 = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            ServerMessage notification1 = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes1);
             String note1 = gsonS.toJson(notification1, messages.Notification.class);
             connections.sendMessage(session, note1);
 
@@ -244,11 +247,11 @@ public class WebSocketHandler{
 
     private String gameRole(String username, GameData game){
         if(username.equals(game.whiteUsername())){
-            return "white.";
+            return "white";
         }else if(username.equals(game.blackUsername())){
-            return "black.";
+            return "black";
         }else{
-            return "spectating.";
+            return "spectating";
         }
     }
 

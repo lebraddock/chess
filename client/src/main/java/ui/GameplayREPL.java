@@ -27,9 +27,9 @@ public class GameplayREPL implements NotificationHandler{
             ws.joinGameObserver(authToken, gameID);
             this.client = new GameClient(ws, color, authToken, gameID);
         }else {
-            ws.joinGameObserver(authToken, gameID);
-            TimeUnit.MILLISECONDS.sleep(250);
             ws.joinGamePlayer(authToken, gameID, color);
+            TimeUnit.MILLISECONDS.sleep(250);
+            ws.joinGameObserver(authToken, gameID);
             this.client = new GameClient(ws, color, authToken, gameID);
         }
     }
