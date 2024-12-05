@@ -34,7 +34,6 @@ public class WebSocketHandler{
     public void onMessage(Session session, String message) throws IOException {
 
         UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
-        System.out.println(action.getCommandType());
         switch (action.getCommandType()) {
             case JOIN_GAME -> joinGame(session, message);
             case CONNECT -> connect(session, message);
@@ -107,7 +106,7 @@ public class WebSocketHandler{
                 String mes = "Sorry, could not join game";
                 ErrorMessage notification = new ErrorMessage(mes);
                 String note = gsonS.toJson(notification, ErrorMessage.class);
-                connections.sendError(auth, notification);
+                connections.sendMessage(session, note);
 
                 connections.remove(gameID, auth);
                 return;
