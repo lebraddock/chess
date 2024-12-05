@@ -99,7 +99,9 @@ public class GameplayREPL implements NotificationHandler{
 
     public void doError(String message){
         ErrorMessage notification = gsonS.fromJson(message, ErrorMessage.class);
-        System.out.print(notification.getMessage());
+        System.out.println("");
+        System.out.println(notification.getMessage());
+        System.out.print("[In GAME]>>> ");
     }
 
     public void sendNotify(String message) {
@@ -115,7 +117,7 @@ public class GameplayREPL implements NotificationHandler{
             TimeUnit.SECONDS.sleep(1);
             if(game.getResult() != 0) {
                 client.setGameFinished(true);
-                printResult(client.game());
+                client.printResult();
             }
             client.updateGame(game);
             System.out.println("");

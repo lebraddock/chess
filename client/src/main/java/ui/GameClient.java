@@ -147,14 +147,46 @@ public class GameClient{
         out.print("[IN GAME]>>> ");
         String end = scanner.nextLine();
         try{
+            ChessPiece.PieceType promPiece = null;
             ChessPosition startPos = notationToNum(start);
             ChessPosition endPos = notationToNum(end);
+            if(endPos.getRow() == 1 || endPos.getRow() == 8) {
+                if(game.getBoard().getPiece(startPos).getPieceType() == ChessPiece.PieceType.PAWN){
+                    promPiece = promotionPiece();
+                }
+            }
             ChessMove move = new ChessMove(startPos, endPos, null);
             ws.makeMove(authToken, gameID, move);
         }catch (Exception e){
-            printBodyText("Sorry! Invalid move");
+            printBodyText("");
         }
 
+
+    }
+
+    public ChessPiece.PieceType promotionPiece(){
+        printHeader("Enter promotion piece:");
+        printBodyText("1: Queen");
+        printBodyText("2: Rook");
+        printBodyText("3: Bishop");
+        printBodyText("4: Knight");
+        out.print(RESET_BG_COLOR);
+        out.print(RESET_TEXT_COLOR);
+        out.print("[IN GAME]>>> ");
+        String input = scanner.nextLine();
+
+        if(input == null){
+            return ChessPiece.PieceType.QUEEN;
+        }
+        int value = Integer.parseInt(input);
+        if(value == 2){
+            return ChessPiece.PieceType.ROOK;
+        }else if(value == 3){
+            return ChessPiece.PieceType.BISHOP;
+        }else if(value == 4){
+            return ChessPiece.PieceType.KNIGHT;
+        }
+        return ChessPiece.PieceType.QUEEN;
 
     }
 
@@ -406,5 +438,24 @@ public class GameClient{
 
     public int getGameID(){
         return gameID;
+    }
+
+    public void printResult(){
+        int result = game.getResult();
+        if(result == 0){
+            return;
+        }else if(result == 1){
+            if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+                printHeader("White wins by checkmate!");
+            }else{
+                printHeader("White wins by resignation!");
+            }
+        }else{
+            if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                printHeader("Black wins by checkmate!");
+            }else{
+                printHeader("Black wins by resignation!");
+            }
+        }
     }
 }

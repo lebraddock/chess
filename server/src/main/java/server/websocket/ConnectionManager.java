@@ -52,11 +52,11 @@ public class ConnectionManager {
         }
 
         // Clean up any connections that were left open.
-        /*for (var c : removeList) {
+        for (var c : removeList) {
             ArrayList<Connection> temp = connections.get(gameID);
             temp.remove(c);
             connections.put(gameID, temp);
-        }*/
+        }
         for (var c : removeList) {
             connections.get(gameID).remove(c);
         }

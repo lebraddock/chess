@@ -34,7 +34,7 @@ public class WebSocketHandler{
     public void onMessage(Session session, String message) throws IOException {
 
         UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
-
+        System.out.println(action.getCommandType());
         switch (action.getCommandType()) {
             case JOIN_GAME -> joinGame(session, message);
             case CONNECT -> connect(session, message);
@@ -87,6 +87,7 @@ public class WebSocketHandler{
             } else {
                 c = "BLACK";
             }
+            System.out.println(action.toString());
             gameService.updateGame(auth, c, gameID);
         }catch(Exception e){
             System.out.println("Could not join game");
@@ -259,5 +260,7 @@ public class WebSocketHandler{
             return "spectating.";
         }
     }
+
+
 }
 
