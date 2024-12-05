@@ -38,21 +38,21 @@ public class GameClient{
     }
 
     public void printInGameMenu() {
-        printHeader("Options:");
-        printBodyText("1: Help");
-        printBodyText("2: Redraw Board");
-        printBodyText("3: Make Move");
-        printBodyText("4: Show Legal Moves");
-        printBodyText("5: Resign");
-        printBodyText("6: Leave");
+        PrintFunctions.printHeader("Options:");
+        PrintFunctions.printBodyText("1: Help");
+        PrintFunctions.printBodyText("2: Redraw Board");
+        PrintFunctions.printBodyText("3: Make Move");
+        PrintFunctions.printBodyText("4: Show Legal Moves");
+        PrintFunctions.printBodyText("5: Resign");
+        PrintFunctions.printBodyText("6: Leave");
     }
 
     public void printViewGameMenu() {
-        printHeader("Options:");
-        printBodyText("1: Help");
-        printBodyText("2: Redraw Board");
-        printBodyText("3: Show Legal Moves");
-        printBodyText("4: Leave");
+        PrintFunctions.printHeader("Options:");
+        PrintFunctions.printBodyText("1: Help");
+        PrintFunctions.printBodyText("2: Redraw Board");
+        PrintFunctions.printBodyText("3: Show Legal Moves");
+        PrintFunctions.printBodyText("4: Leave");
     }
 
     public String evaluateViewInput(int value){
@@ -68,7 +68,7 @@ public class GameClient{
         }else if(value == 4){
             return "Exiting Game...";
         }else{
-            printBodyText("Incorrect Input");
+            PrintFunctions.printBodyText("Incorrect Input");
         }
         return "";
     }
@@ -90,7 +90,7 @@ public class GameClient{
         }else if(value == 6){
             return "Exiting Game...";
         }else{
-            printBodyText("Incorrect Input");
+            PrintFunctions.printBodyText("Incorrect Input");
         }
         return "";
     }
@@ -112,10 +112,10 @@ public class GameClient{
 
     public void showLegalMoves(){
         if(gameFinished){
-            printBodyText("The game has ended");
+            PrintFunctions.printBodyText("The game has ended");
             return;
         }
-        printHeader("Enter piece to move:");
+        PrintFunctions.printHeader("Enter piece to move:");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         out.print("[IN GAME]>>> ");
@@ -126,22 +126,22 @@ public class GameClient{
             printBoard();
             resetHighlight();
         }catch(Exception e){
-            printBodyText("Sorry! Please select a piece in standard chess notation");
+            PrintFunctions.printBodyText("Sorry! Please select a piece in standard chess notation");
         }
     }
 
 
     public void makeMove(){
         if(gameFinished){
-            printBodyText("The game has ended");
+            PrintFunctions.printBodyText("The game has ended");
             return;
         }
-        printHeader("Enter move start position:");
+        PrintFunctions.printHeader("Enter move start position:");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         out.print("[IN GAME]>>> ");
         String start = scanner.nextLine();
-        printHeader("Enter move end position:");
+        PrintFunctions.printHeader("Enter move end position:");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         out.print("[IN GAME]>>> ");
@@ -158,18 +158,18 @@ public class GameClient{
             ChessMove move = new ChessMove(startPos, endPos, null);
             ws.makeMove(authToken, gameID, move);
         }catch (Exception e){
-            printBodyText("");
+            PrintFunctions.printBodyText("");
         }
 
 
     }
 
     public ChessPiece.PieceType promotionPiece(){
-        printHeader("Enter promotion piece:");
-        printBodyText("1: Queen");
-        printBodyText("2: Rook");
-        printBodyText("3: Bishop");
-        printBodyText("4: Knight");
+        PrintFunctions.printHeader("Enter promotion piece:");
+        PrintFunctions.printBodyText("1: Queen");
+        PrintFunctions.printBodyText("2: Rook");
+        PrintFunctions.printBodyText("3: Bishop");
+        PrintFunctions.printBodyText("4: Knight");
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         out.print("[IN GAME]>>> ");
@@ -199,23 +199,23 @@ public class GameClient{
         ChessGame.TeamColor turn = game.getTeamTurn();
         if(gameFinished){
             if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                printBodyText("White has been checkmated");
+                PrintFunctions.printBodyText("White has been checkmated");
             }else if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
-                printBodyText("Black had been checkmated");
+                PrintFunctions.printBodyText("Black had been checkmated");
             }
             if(game.getResult() == 1){
-                printHeader("White has won the game");
+                PrintFunctions.printHeader("White has won the game");
             }else{
-                printHeader("Black has won the game");
+                PrintFunctions.printHeader("Black has won the game");
             }
             return;
         }
 
         if(game.isInCheck(turn)){
             if(turn == ChessGame.TeamColor.WHITE){
-                printBodyText("White is in check!");
+                PrintFunctions.printBodyText("White is in check!");
             }else{
-                printBodyText("Black is in check!");
+                PrintFunctions.printBodyText("Black is in check!");
             }
         }
     }
@@ -286,22 +286,6 @@ public class GameClient{
         }else{
             out.print(EMPTY_PIECE);
         }
-    }
-
-    public void printHeader(String str){
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_DARK_GREY);
-        out.println(str);
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-    }
-
-    public void printBodyText(String str){
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_WHITE);
-        out.println("   " + str);
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
     }
 
     private void setHighlight(int y, int x, boolean isWhite){
@@ -446,15 +430,15 @@ public class GameClient{
             return;
         }else if(result == 1){
             if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
-                printHeader("White wins by checkmate!");
+                PrintFunctions.printHeader("White wins by checkmate!");
             }else{
-                printHeader("White wins by resignation!");
+                PrintFunctions.printHeader("White wins by resignation!");
             }
         }else{
             if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                printHeader("Black wins by checkmate!");
+                PrintFunctions.printHeader("Black wins by checkmate!");
             }else{
-                printHeader("Black wins by resignation!");
+                PrintFunctions.printHeader("Black wins by resignation!");
             }
         }
     }

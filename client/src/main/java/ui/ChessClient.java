@@ -72,34 +72,34 @@ public class ChessClient{
             executeLogout();
             return "Finished";
         }else{
-            printBodyText("Incorrect Input");
+            PrintFunctions.printBodyText("Incorrect Input");
         }
         return "";
     }
 
     public void displayLoginMenu(){
-        printHeader("Pick an option to get started:");
-        printBodyText("1: Help");
-        printBodyText("2: Login");
-        printBodyText("3: Register");
-        printBodyText("4: Quit");
+        PrintFunctions.printHeader("Pick an option to get started:");
+        PrintFunctions.printBodyText("1: Help");
+        PrintFunctions.printBodyText("2: Login");
+        PrintFunctions.printBodyText("3: Register");
+        PrintFunctions.printBodyText("4: Quit");
     }
 
     public void displayGameMenu(){
-        printHeader("Options:");
-        printBodyText("1: Help");
-        printBodyText("2: Create Game");
-        printBodyText("3: List Games");
-        printBodyText("4: Join Game");
-        printBodyText("5: Observe Game");
-        printBodyText("6: Logout");
+        PrintFunctions.printHeader("Options:");
+        PrintFunctions.printBodyText("1: Help");
+        PrintFunctions.printBodyText("2: Create Game");
+        PrintFunctions.printBodyText("3: List Games");
+        PrintFunctions.printBodyText("4: Join Game");
+        PrintFunctions.printBodyText("5: Observe Game");
+        PrintFunctions.printBodyText("6: Logout");
 
     }
 
     public void executeViewGame(){
         int gameID;
         executeListGames();
-        printBodyText("Enter game number to view games");
+        PrintFunctions.printBodyText("Enter game number to view games");
         out.print("[LOGGED IN]>>> ");
         try {
             out.print("[LOGGED IN]>>> ");
@@ -109,35 +109,35 @@ public class ChessClient{
             GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, null);
             inGameREPL.viewREPL();
         }catch (Exception e){
-            printBodyText("Sorry! Incorrect input");
+            PrintFunctions.printBodyText("Sorry! Incorrect input");
         }
 
     }
 
     public void executeLogout(){
         try {
-            printHeader("Logging out...");
+            PrintFunctions.printHeader("Logging out...");
             server.logout(authToken);
             authToken = null;
             loginState = 1;
         } catch (Exception e) {
-            printBodyText("Sorry! Unable to logout");
+            PrintFunctions.printBodyText("Sorry! Unable to logout");
         }
     }
 
     public void executeCreateGame(){
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
-        printBodyText("Enter Game Name:");
+        PrintFunctions.printBodyText("Enter Game Name:");
         out.print("[LOGGED IN]>>> ");
         String gamename = scanner.nextLine();
         try {
             CreateGameRequest req = new CreateGameRequest(gamename);
             int gameID = server.createGame(req, authToken);
-            printHeader("Game created!");
-            printBodyText("Game name: " + gamename);
+            PrintFunctions.printHeader("Game created!");
+            PrintFunctions.printBodyText("Game name: " + gamename);
         } catch (Exception e) {
-            printBodyText("Sorry! Game could not be created");
+            PrintFunctions.printBodyText("Sorry! Game could not be created");
         }
     }
 
@@ -150,7 +150,7 @@ public class ChessClient{
             out.print(SET_TEXT_COLOR_BLACK);
             out.println("Games:");
             if (chessGames.size() == 0) {
-                printBodyText("There are no games to display");
+                PrintFunctions.printBodyText("There are no games to display");
             } else {
                 for (int i = 0; i < chessGames.size(); i++) {
                     printOneGame(chessGames.get(i), i + 1);
@@ -158,7 +158,7 @@ public class ChessClient{
             }
             return chessGames.size();
         } catch (Exception e) {
-            printBodyText("No Games to display");
+            PrintFunctions.printBodyText("No Games to display");
         }
         return 0;
 
@@ -173,11 +173,11 @@ public class ChessClient{
         if(bName == null){
             bName = "Empty";
         }
-        printBodyText("Game Number: " + i);
-        printBodyText("Name: " + game.gameName());
-        printBodyText("White Player: " + wName);
-        printBodyText("Black Player: " + bName);
-        printHeader(".................................");
+        PrintFunctions.printBodyText("Game Number: " + i);
+        PrintFunctions.printBodyText("Name: " + game.gameName());
+        PrintFunctions.printBodyText("White Player: " + wName);
+        PrintFunctions.printBodyText("Black Player: " + bName);
+        PrintFunctions.printHeader(".................................");
     }
 
     private int getIDFromNum(int num){
@@ -199,7 +199,7 @@ public class ChessClient{
             return;
         }
         try {
-            printBodyText("Enter game number:");
+            PrintFunctions.printBodyText("Enter game number:");
             out.print("[LOGGED IN]>>> ");
             String gameIDString = scanner.nextLine();
             gameID = Integer.parseInt(gameIDString);
@@ -207,9 +207,9 @@ public class ChessClient{
             if(gameID == 0){
                 throw new Exception();
             }
-            printBodyText("Enter team color:");
-            printBodyText("   1 for white:");
-            printBodyText("   2 for black:");
+            PrintFunctions.printBodyText("Enter team color:");
+            PrintFunctions.printBodyText("   1 for white:");
+            PrintFunctions.printBodyText("   2 for black:");
             out.print("[LOGGED IN]>>> ");
             colorS = scanner.nextLine();
             int colorID = Integer.parseInt(colorS);
@@ -223,24 +223,24 @@ public class ChessClient{
                 throw new Exception();
             }
         }catch (Exception e){
-            printBodyText("Sorry! Incorrect input");
+            PrintFunctions.printBodyText("Sorry! Incorrect input");
             return;
         }
         //JoinGameRequest req = new JoinGameRequest(colorS, gameID);
         try {
-            printHeader("Successfully joined game!");
+            PrintFunctions.printHeader("Successfully joined game!");
             GameplayREPL inGameREPL = new GameplayREPL(url, authToken, gameID, tColor);
             inGameREPL.gameREPL();
         }catch(Exception e){
             String mes = e.getMessage();
             if(mes == null){
-                printBodyText("Sorry! An unknown error occured");
+                PrintFunctions.printBodyText("Sorry! An unknown error occured");
             }else if(mes.contains("400")){
-                printBodyText("Sorry! Game does not exist.");
+                PrintFunctions.printBodyText("Sorry! Game does not exist.");
             }else if(mes.contains("403")){
-                printBodyText("Sorry! Space is already taken.");
+                PrintFunctions.printBodyText("Sorry! Space is already taken.");
             }else{
-                printBodyText("Sorry! There was an unknown error.");
+                PrintFunctions.printBodyText("Sorry! There was an unknown error.");
             }
         }
     }
@@ -249,20 +249,20 @@ public class ChessClient{
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         if(loginState == 2){
-            printHeader("Already Logged In");
+            PrintFunctions.printHeader("Already Logged In");
             return;
         }
-        printBodyText("Enter Username:");
+        PrintFunctions.printBodyText("Enter Username:");
         out.print("[LOGGED OUT]>>> ");
         String username = scanner.nextLine();
-        printBodyText("Enter Password:");
+        PrintFunctions.printBodyText("Enter Password:");
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
         try {
             authToken = server.login(username, password);
             loginState = 2;
         } catch (Exception e) {
-            printBodyText("Incorrect Username or Password");
+            PrintFunctions.printBodyText("Incorrect Username or Password");
         }
     }
 
@@ -270,16 +270,16 @@ public class ChessClient{
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
         if(loginState == 2){
-            printHeader("Already Logged In");
+            PrintFunctions.printHeader("Already Logged In");
             return;
         }
-        printBodyText("Enter Username:");
+        PrintFunctions.printBodyText("Enter Username:");
         out.print("[LOGGED OUT]>>> ");
         String username = scanner.nextLine();
-        printBodyText("Enter Password:");
+        PrintFunctions.printBodyText("Enter Password:");
         out.print("[LOGGED OUT]>>> ");
         String password = scanner.nextLine();
-        printBodyText("Enter Email:");
+        PrintFunctions.printBodyText("Enter Email:");
         out.print("[LOGGED OUT]>>> ");
         String email = scanner.nextLine();
         try {
@@ -288,7 +288,7 @@ public class ChessClient{
                 loginState = 2;
             }
         }catch (Exception e){
-            printBodyText("Sorry! Username already taken");
+            PrintFunctions.printBodyText("Sorry! Username already taken");
         }
     }
 
@@ -310,20 +310,6 @@ public class ChessClient{
         return loginState;
     }
 
-    public void printHeader(String str){
-        out.print(SET_BG_COLOR_LIGHT_GREY);
-        out.print(SET_TEXT_COLOR_DARK_GREY);
-        out.println(str);
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-    }
 
-    public void printBodyText(String str){
-        out.print(SET_BG_COLOR_DARK_GREY);
-        out.print(SET_TEXT_COLOR_WHITE);
-        out.println("   " + str);
-        out.print(RESET_BG_COLOR);
-        out.print(RESET_TEXT_COLOR);
-    }
 
 }

@@ -37,7 +37,7 @@ public class GameplayREPL implements NotificationHandler{
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while(!result.equals("Exiting Game...")){
-            client.printHeader("Enter option: (Press 1 for help)");
+            PrintFunctions.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[IN GAME]>>> ");
@@ -58,7 +58,7 @@ public class GameplayREPL implements NotificationHandler{
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while(!result.equals("Exiting Game...")){
-            client.printHeader("Enter option: (Press 1 for help)");
+            PrintFunctions.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[IN GAME]>>> ");
@@ -134,15 +134,15 @@ public class GameplayREPL implements NotificationHandler{
             return;
         }else if(result == 1){
             if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
-                client.printHeader("White wins by checkmate!");
+                PrintFunctions.printHeader("White wins by checkmate!");
             }else{
-                client.printHeader("White wins by resignation!");
+                PrintFunctions.printHeader("White wins by resignation!");
             }
         }else{
             if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                client.printHeader("Black wins by checkmate!");
+                PrintFunctions.printHeader("Black wins by checkmate!");
             }else{
-                client.printHeader("Black wins by resignation!");
+                PrintFunctions.printHeader("Black wins by resignation!");
             }
         }
     }

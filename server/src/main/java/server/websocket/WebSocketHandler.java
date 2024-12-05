@@ -210,6 +210,7 @@ public class WebSocketHandler{
                 ErrorMessage errorMessage = new ErrorMessage(mes);
                 String note = gsonS.toJson(errorMessage, ErrorMessage.class);
                 connections.sendMessage(session, note);
+                return;
             }
 
             if(game.game().getResult() != 0){
@@ -217,6 +218,7 @@ public class WebSocketHandler{
                 ErrorMessage errorMessage = new ErrorMessage(mes);
                 String note = gsonS.toJson(errorMessage, ErrorMessage.class);
                 connections.sendMessage(session, note);
+                return;
             }
 
             resign(gameID, auth);

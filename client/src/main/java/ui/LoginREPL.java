@@ -21,9 +21,9 @@ public class LoginREPL{
         String output;
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        client.printHeader("Welcome to the chess client!");
+        PrintFunctions.printHeader("Welcome to the chess client!");
         while(!result.equals("Finished")) {
-            client.printHeader("Enter option: (Press 1 for help)");
+            PrintFunctions.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[LOGGED OUT]>>> ");
@@ -38,19 +38,19 @@ public class LoginREPL{
             }
             if(client.getLoginState() == 2){
                 loggedInREPL();
-                client.printHeader("Welcome to the chess client! Press 1 for help");
+                PrintFunctions.printHeader("Welcome to the chess client! Press 1 for help");
             }
         }
-        client.printHeader("Exiting program...");
+        PrintFunctions.printHeader("Exiting program...");
     }
 
     public void loggedInREPL(){
         String output;
         String result = "";
         Scanner scanner = new Scanner(System.in);
-        client.printHeader("Thanks for logging in!");
+        PrintFunctions.printHeader("Thanks for logging in!");
         while(!result.equals("Finished")) {
-            client.printHeader("Enter option: (Press 1 for help)");
+            PrintFunctions.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[LOGGED IN]>>> ");
@@ -70,7 +70,7 @@ public class LoginREPL{
         Scanner scanner = new Scanner(System.in);
         String result = "";
         while(!result.equals("Exiting Game...")){
-            client.printHeader("Enter option: (Press 1 for help)");
+            PrintFunctions.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
             out.print("[IN GAME]>>> ");
