@@ -115,6 +115,7 @@ public class GameplayREPL implements NotificationHandler{
             TimeUnit.SECONDS.sleep(1);
             if(game.getResult() != 0) {
                 client.setGameFinished(true);
+                printResult(client.game());
             }
             client.updateGame(game);
             System.out.println("");
@@ -122,6 +123,25 @@ public class GameplayREPL implements NotificationHandler{
             System.out.print("[IN GAME]>>> ");
         }catch(Exception e){
             System.out.println("Could not update game");
+        }
+    }
+
+    public void printResult(ChessGame game){
+        int result = game.getResult();
+        if(result == 0){
+            return;
+        }else if(result == 1){
+            if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+                client.printHeader("White wins by checkmate!");
+            }else{
+                client.printHeader("White wins by resignation!");
+            }
+        }else{
+            if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
+                client.printHeader("Black wins by checkmate!");
+            }else{
+                client.printHeader("Black wins by resignation!");
+            }
         }
     }
 

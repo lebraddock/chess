@@ -203,19 +203,32 @@ public class WebSocketHandler{
             int gameID = action.getGameID();
             String auth = action.getAuthToken();
             String userName = gameService.getName(auth);
+            GameData game = gameService.getGame(gameID);
+            if(!userName.equals(game.blackUsername()) && !userName.equals(game.whiteUsername())){
+                String mes = String.format("You cannot resign, you are an observer");
+                ErrorMessage errorMessage = new ErrorMessage(mes);
+                String note = gsonS.toJson(errorMessage, ErrorMessage.class);
+                connections.sendMessage(session, note);
+            }
+
+            if(game.game().getResult() != 0){
+                String mes = String.format("You cannot resign, the game is already over.");
+                ErrorMessage errorMessage = new ErrorMessage(mes);
+                String note = gsonS.toJson(errorMessage, ErrorMessage.class);
+                connections.sendMessage(session, note);
+            }
 
             resign(gameID, auth);
+
+            String mes1 = String.format("You have resigned");
+            ServerMessage notification1 = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, message);
+            String note1 = gsonS.toJson(notification1, messages.Notification.class);
+            connections.sendMessage(session, note1);
+
             String mes = String.format("%s has resigned.", userName);
             ServerMessage notification = new messages.Notification(ServerMessage.ServerMessageType.NOTIFICATION, mes);
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(gameID, session, note);
-
-            ChessGame game = gameService.getGame(gameID).game();
-
-            ServerMessage load = new LoadGameMessage(game);
-            String mesJson = gsonS.toJson(load, LoadGameMessage.class);
-            connections.broadcast(gameID,session, mesJson);
-
         }catch(Exception e){
             System.out.println("Could not leave session");
         }
