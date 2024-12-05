@@ -398,12 +398,6 @@ public class GameClient{
         return new ChessPosition(y,x);
     }
 
-    private void setPrevMove(ChessMove move){
-        prevMove = new ArrayList<>();
-        prevMove.add(move.getStartPosition());
-        prevMove.add(move.getEndPosition());
-    }
-
     private void setHighLightPositions(ChessPosition pos){
         resetHighlight();
         Collection<ChessMove> highLightPositionsT = game.getValidMoves(pos);

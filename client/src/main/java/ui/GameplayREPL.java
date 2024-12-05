@@ -45,7 +45,7 @@ public class GameplayREPL implements NotificationHandler{
             String[] lineS = line.split(" ");
             if (lineS.length >= 2) {
                 out.println("Error: Too many inputs");
-            } else if (!isValidInt(lineS[0], 6)) {
+            } else if (!PrintFunctions.isValidInt(lineS[0], 6)) {
                 out.println("Error: Not a valid input");
             } else {
                 result = client.evaluateInput(Integer.parseInt(lineS[0]));
@@ -66,7 +66,7 @@ public class GameplayREPL implements NotificationHandler{
             String[] lineS = line.split(" ");
             if (lineS.length >= 2) {
                 out.println("Error: Too many inputs");
-            } else if (!isValidInt(lineS[0], 4)) {
+            } else if (!PrintFunctions.isValidInt(lineS[0], 4)) {
                 out.println("Error: Not a valid input");
             } else {
                 result = client.evaluateViewInput(Integer.parseInt(lineS[0]));
@@ -74,19 +74,6 @@ public class GameplayREPL implements NotificationHandler{
         }
     }
 
-    private boolean isValidInt(String value, int x){
-        if(value.isEmpty()){
-            return false;
-        }else if(!value.matches("-?\\d+")){
-            return false;
-        }
-        int num = Integer.parseInt(value);
-        if(num >= 1 && num <= x){
-            return true;
-        }
-        return false;
-
-    }
 
     public void handleMessage(String message){
         ServerMessage serverMessage = gsonS.fromJson(message, ServerMessage.class);
@@ -128,23 +115,5 @@ public class GameplayREPL implements NotificationHandler{
         }
     }
 
-    public void printResult(ChessGame game){
-        int result = game.getResult();
-        if(result == 0){
-            return;
-        }else if(result == 1){
-            if(game.isInCheckmate(ChessGame.TeamColor.BLACK)){
-                PrintFunctions.printHeader("White wins by checkmate!");
-            }else{
-                PrintFunctions.printHeader("White wins by resignation!");
-            }
-        }else{
-            if(game.isInCheckmate(ChessGame.TeamColor.WHITE)){
-                PrintFunctions.printHeader("Black wins by checkmate!");
-            }else{
-                PrintFunctions.printHeader("Black wins by resignation!");
-            }
-        }
-    }
 
 }

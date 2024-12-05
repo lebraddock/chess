@@ -64,16 +64,6 @@ public class WebSocketHandler{
         }
     }
 
-    private boolean idExists(int gameID, String auth) throws Exception{
-        List<GameResult> gamesList = gameService.getGames(auth);
-        for(GameResult game : gamesList){
-            if(game.gameID() == gameID){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void joinGame(Session session, String message){
         try {
             JoinGameCommand action = gsonS.fromJson(message, JoinGameCommand.class);

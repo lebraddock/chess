@@ -24,4 +24,18 @@ public class PrintFunctions{
         out.print(RESET_BG_COLOR);
         out.print(RESET_TEXT_COLOR);
     }
+
+    public static boolean isValidInt(String value, int x){
+        if(value.isEmpty()){
+            return false;
+        }else if(!value.matches("-?\\d+")){
+            return false;
+        }
+        int num = Integer.parseInt(value);
+        if(num >= 1 && num <= x){
+            return true;
+        }
+        return false;
+
+    }
 }
