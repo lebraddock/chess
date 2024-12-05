@@ -34,7 +34,7 @@ public class WebSocketHandler{
     public void onMessage(Session session, String message) throws IOException {
 
         UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
-        
+
         switch (action.getCommandType()) {
             case JOIN_GAME -> joinGame(session, message);
             case CONNECT -> connect(session, message);
@@ -102,8 +102,14 @@ public class WebSocketHandler{
 
             connections.add(gameID, auth, session);
 
-            if(!idExists(gameID, auth)){
-                throw new Exception();
+            if(gameService.getGame(gameID) == null || gameService.getName(auth) == null){
+                String mes = "Sorry, could not join game";
+                ErrorMessage notification = new ErrorMessage(mes);
+                String note = gsonS.toJson(notification, ErrorMessage.class);
+                connections.sendError(auth, notification);
+
+                connections.remove(gameID, auth);
+                return;
             }
             //send message to user
             GameData game = gameService.getGame(gameID);
@@ -118,16 +124,7 @@ public class WebSocketHandler{
             String note = gsonS.toJson(notification, messages.Notification.class);
             connections.broadcast(game.gameID(), session, note);
         }catch(Exception e){
-            UserGameCommand action = gsonS.fromJson(message, UserGameCommand.class);
-            int gameID = action.getGameID();
-            String auth = action.getAuthToken();
-
-            String mes = "Sorry, could not join game";
-            ErrorMessage notification = new ErrorMessage(mes);
-            String note = gsonS.toJson(notification, ErrorMessage.class);
-            connections.sendMessage(session, note);
-
-            connections.remove(gameID, auth);
+            e.printStackTrace();
         }
     }
 
@@ -136,16 +133,51 @@ public class WebSocketHandler{
         int gameID = cmd.getGameID();
         String auth = cmd.getAuthToken();
         ChessMove move = cmd.getMove();
+        ChessGame game;
+
 
         try{
             GameData gameData = gameService.getGame(gameID);
-            ChessGame game = gameData.game();
+            game = gameData.game();
+            String userN = gameService.getName(auth);
+
+
+
+            if(game.getResult() != 0){
+                String winner;
+                if(game.getResult() == 1){
+                    winner = "white";
+                }else{
+                    winner = "black";
+                }
+                String mes = String.format("The game is over, %s already won!", winner);
+                ErrorMessage notification = new ErrorMessage(mes);
+                String note = gsonS.toJson(notification, ErrorMessage.class);
+                connections.sendMessage(session, note);
+                return;
+            }
+            ChessGame.TeamColor pieceColor = game.getBoard().getPiece(move.getStartPosition()).getTeamColor();
+            if(userN.equals(gameData.blackUsername())){
+                if(pieceColor == ChessGame.TeamColor.WHITE){
+                    throw new Exception();
+                }
+            }
+            if(userN.equals(gameData.whiteUsername())){
+                if(pieceColor == ChessGame.TeamColor.BLACK){
+                    throw new Exception();
+                }
+            }
+            if(!userN.equals(gameData.blackUsername()) && !userN.equals(gameData.whiteUsername())){
+                throw new Exception();
+            }
+
+
             game.makeMove(move);
             GameData temp = new GameData(gameID, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), game);
             ChessPiece piece = temp.game().getBoard().getPiece(move.getStartPosition());
             String p;
             gameService.makeMove(auth, temp);
-            String userN = gameService.getName(auth);
+
 
 
             String mes = String.format("%s made a move!", userN);
@@ -158,7 +190,10 @@ public class WebSocketHandler{
             connections.broadcast(gameID,session, mesJson);
             connections.sendMessage(session, mesJson);
         } catch(Exception e){
-            System.out.println("Error: Could not Make move");
+            String mes = String.format("Sorry, this is an invalid move");
+            ErrorMessage notification = new ErrorMessage(mes);
+            String note = gsonS.toJson(notification, ErrorMessage.class);
+            connections.sendMessage(session, note);
         }
     }
 

@@ -36,7 +36,7 @@ public class GameplayREPL implements NotificationHandler{
     public void gameREPL(){
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while(!result.equals("Exiting Game...") || leave){
+        while(!result.equals("Exiting Game...")){
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
@@ -57,7 +57,7 @@ public class GameplayREPL implements NotificationHandler{
     public void viewREPL(){
         Scanner scanner = new Scanner(System.in);
         String result = "";
-        while(!result.equals("Exiting Game...") || leave){
+        while(!result.equals("Exiting Game...")){
             client.printHeader("Enter option: (Press 1 for help)");
             out.print(RESET_BG_COLOR);
             out.print(RESET_TEXT_COLOR);
@@ -93,14 +93,13 @@ public class GameplayREPL implements NotificationHandler{
         switch(serverMessage.getServerMessageType()){
             case LOAD_GAME -> loadGame(message);
             case NOTIFICATION -> sendNotify(message);
-            case ERROR -> preventEnter(message);
+            case ERROR -> doError(message);
         }
     }
 
-    public void preventEnter(String message){
+    public void doError(String message){
         ErrorMessage notification = gsonS.fromJson(message, ErrorMessage.class);
         System.out.print(notification.getMessage());
-        leave = true;
     }
 
     public void sendNotify(String message) {

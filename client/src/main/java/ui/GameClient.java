@@ -150,7 +150,6 @@ public class GameClient{
             ChessPosition startPos = notationToNum(start);
             ChessPosition endPos = notationToNum(end);
             ChessMove move = new ChessMove(startPos, endPos, null);
-            game.makeMove(move);
             ws.makeMove(authToken, gameID, move);
         }catch (Exception e){
             printBodyText("Sorry! Invalid move");
